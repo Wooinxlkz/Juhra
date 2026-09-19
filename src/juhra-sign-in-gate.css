@@ -1,0 +1,539 @@
+.juhra-sign-in-gate {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  height: 100dvh;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  color: #f6f1e7;
+  background: #071014;
+  font-family: var(--app-font-sans);
+}
+
+.juhra-sign-in-backdrop,
+.juhra-sign-in-video,
+.juhra-sign-in-atmosphere,
+.juhra-sign-in-grain {
+  position: absolute;
+  inset: 0;
+}
+
+.juhra-sign-in-backdrop {
+  z-index: -4;
+  background-position: center;
+  background-size: cover;
+  filter: saturate(.78) brightness(.62);
+  transform: scale(1.04);
+  transition: opacity .6s ease, filter .6s ease;
+}
+
+.juhra-sign-in-backdrop::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(4, 10, 13, .9) 0%, rgba(4, 10, 13, .52) 38%, rgba(4, 10, 13, .3) 100%),
+    linear-gradient(0deg, rgba(3, 8, 10, .72) 0%, transparent 52%, rgba(3, 8, 10, .3) 100%);
+}
+
+.juhra-sign-in-backdrop.is-video-ready {
+  filter: saturate(.86) brightness(.66);
+}
+
+.juhra-sign-in-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .92;
+}
+
+.juhra-sign-in-atmosphere {
+  z-index: -3;
+  background:
+    radial-gradient(circle at 76% 34%, rgba(43, 151, 151, .26), transparent 25%),
+    radial-gradient(circle at 28% 74%, rgba(194, 73, 65, .13), transparent 30%),
+    linear-gradient(115deg, rgba(3, 9, 12, .16), transparent 45%);
+  mix-blend-mode: screen;
+}
+
+.juhra-sign-in-grain {
+  z-index: 4;
+  pointer-events: none;
+  opacity: .08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='juhra-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23juhra-noise)' opacity='.6'/%3E%3C/svg%3E");
+}
+
+.juhra-sign-in-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 29px 42px;
+}
+
+.juhra-sign-in-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #f4e9d3;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .28em;
+}
+
+.juhra-sign-in-mark {
+  position: relative;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: #e8af4c;
+  transform: rotate(45deg);
+}
+
+.juhra-sign-in-mark::before,
+.juhra-sign-in-mark::after {
+  position: absolute;
+  content: "";
+  background: currentColor;
+}
+
+.juhra-sign-in-mark::before { width: 1px; height: 29px; }
+.juhra-sign-in-mark::after { width: 29px; height: 1px; }
+.juhra-sign-in-mark i { position: absolute; width: 20px; height: 20px; border: 1px solid currentColor; }
+.juhra-sign-in-mark i:last-child { width: 11px; height: 11px; opacity: .55; }
+
+.juhra-sign-in-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(223, 235, 222, .62);
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: .16em;
+}
+
+.juhra-sign-in-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #73d5c8;
+  box-shadow: 0 0 0 4px rgba(115, 213, 200, .1);
+}
+
+.juhra-sign-in-layout {
+  position: relative;
+  display: grid;
+  flex: 1;
+  width: min(1180px, calc(100% - 72px));
+  min-height: 0;
+  grid-template-columns: 1fr;
+  place-items: center;
+  align-items: center;
+  margin: auto;
+  padding: 78px 0 58px;
+}
+
+.juhra-sign-in-story {
+  grid-area: 1 / 1;
+  justify-self: start;
+  width: min(300px, 27vw);
+  max-width: 300px;
+  margin-left: clamp(24px, calc((100vw - 1180px) / 2 + 24px), 170px);
+}
+
+.juhra-sign-in-eyebrow,
+.juhra-sign-in-panel-topline,
+.juhra-sign-in-footer-bar {
+  font-family: var(--app-font-mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.juhra-sign-in-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #e8af4c;
+  font-size: 9px;
+}
+
+.juhra-sign-in-eyebrow::before {
+  width: 26px;
+  height: 1px;
+  content: "";
+  background: currentColor;
+}
+
+.juhra-sign-in-story h1 {
+  margin: 19px 0 0;
+  color: #fff9ed;
+  font-family: 'Space Grotesk', var(--app-font-sans);
+  font-size: clamp(48px, 6.3vw, 82px);
+  font-weight: 500;
+  letter-spacing: -.085em;
+  line-height: .87;
+}
+
+.juhra-sign-in-story h1 em {
+  display: block;
+  color: #8fd7d0;
+  font-style: normal;
+}
+
+.juhra-sign-in-story p {
+  max-width: 290px;
+  margin: 24px 0 0;
+  color: rgba(239, 239, 225, .67);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.juhra-sign-in-story-rule {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 46px;
+  color: rgba(255, 255, 255, .42);
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: .1em;
+}
+
+.juhra-sign-in-story-rule span {
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: #d5645e;
+}
+
+.juhra-sign-in-panel {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(380px, 100%);
+  overflow: hidden;
+  padding: 20px 22px 17px;
+  background: linear-gradient(145deg, rgba(20, 29, 31, .78), rgba(10, 17, 20, .72));
+  border: 1px solid rgba(225, 232, 208, .2);
+  border-radius: 4px;
+  box-shadow: 0 26px 90px rgba(0, 0, 0, .42), inset 0 1px rgba(255, 255, 255, .1);
+  backdrop-filter: blur(17px) saturate(120%);
+  -webkit-backdrop-filter: blur(17px) saturate(120%);
+}
+
+.juhra-sign-in-panel::before,
+.juhra-sign-in-panel::after {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  content: "";
+  border-color: rgba(232, 175, 76, .8);
+  border-style: solid;
+}
+.juhra-sign-in-panel::before { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+.juhra-sign-in-panel::after { right: 12px; bottom: 12px; border-width: 0 1px 1px 0; }
+
+.juhra-sign-in-panel-glint {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 220px;
+  height: 220px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(95, 191, 181, .16), transparent 66%);
+}
+
+.juhra-sign-in-panel-topline {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(232, 175, 76, .84);
+  font-size: 8px;
+}
+
+.juhra-sign-in-panel-topline svg { color: #76d2c8; }
+
+.juhra-sign-in-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.juhra-sign-in-mini-mark {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  color: #e8af4c;
+  border: 1px solid rgba(232, 175, 76, .38);
+  border-radius: 50%;
+  background: rgba(232, 175, 76, .08);
+}
+
+.juhra-sign-in-heading h2 {
+  margin: 0;
+  color: #fff8ea;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.055em;
+}
+
+.juhra-sign-in-lede {
+  margin: 5px 0 0;
+  color: rgba(232, 237, 221, .56);
+  font-size: 11px;
+}
+
+.juhra-sign-in-providers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 17px;
+}
+
+.juhra-sign-in-provider {
+  display: flex;
+  min-height: 37px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: rgba(246, 241, 231, .82);
+  background: rgba(255, 255, 255, .055);
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 3px;
+  font-size: 10px;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.juhra-sign-in-provider:hover {
+  background: rgba(255, 255, 255, .105);
+  border-color: rgba(143, 215, 208, .44);
+  transform: translateY(-1px);
+}
+
+.juhra-provider-icon {
+  display: grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+}
+.juhra-provider-discord { color: #9aa4e8; }
+.juhra-provider-steam { color: #9bd7d0; }
+.juhra-provider-epic-games { color: #e5b261; }
+
+.juhra-sign-in-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 13px;
+  color: rgba(255, 255, 255, .34);
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.juhra-sign-in-divider::before,
+.juhra-sign-in-divider::after {
+  flex: 1;
+  height: 1px;
+  content: "";
+  background: rgba(255, 255, 255, .12);
+}
+
+.juhra-sign-in-form { display: grid; gap: 13px; }
+
+.juhra-sign-in-field {
+  display: grid;
+  gap: 7px;
+  color: rgba(242, 239, 226, .56);
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.juhra-sign-in-input-wrap {
+  display: flex;
+  min-height: 39px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 12px;
+  color: rgba(143, 215, 208, .72);
+  background: rgba(2, 10, 12, .36);
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 3px;
+  transition: border-color .2s ease, background .2s ease;
+}
+.juhra-sign-in-input-wrap:focus-within {
+  background: rgba(5, 16, 18, .58);
+  border-color: rgba(143, 215, 208, .62);
+}
+.juhra-sign-in-input-wrap input {
+  min-width: 0;
+  flex: 1;
+  color: #fbf5e9;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-family: var(--app-font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.juhra-sign-in-input-wrap input::placeholder { color: rgba(232, 237, 221, .3); }
+.juhra-sign-in-password-toggle {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: rgba(255, 255, 255, .42);
+}
+.juhra-sign-in-password-toggle:hover { color: #f1be63; }
+
+.juhra-sign-in-actions { display: grid; gap: 9px; margin-top: 5px; }
+.juhra-sign-in-submit {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #1a1610;
+  background: #e6ad4f;
+  border: 1px solid rgba(255, 223, 157, .56);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.juhra-sign-in-submit:hover {
+  background: #f5c56e;
+  box-shadow: 0 7px 22px rgba(230, 173, 79, .2);
+  transform: translateY(-1px);
+}
+.juhra-sign-in-skip {
+  min-height: 28px;
+  color: rgba(242, 239, 226, .48);
+  font-size: 10px;
+  transition: color .2s ease;
+}
+.juhra-sign-in-skip:hover { color: #8fd7d0; }
+
+.juhra-sign-in-footer {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 19px;
+  color: rgba(242, 239, 226, .42);
+  font-size: 10px;
+}
+.juhra-sign-in-create {
+  color: #e8af4c;
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 175, 76, .35);
+  text-underline-offset: 3px;
+}
+.juhra-sign-in-create:hover { color: #fff0c9; }
+.juhra-sign-in-message {
+  margin: 11px 0 0;
+  color: #8fd7d0;
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: .04em;
+  text-align: center;
+}
+
+.juhra-sign-in-footer-bar {
+  position: absolute;
+  right: 42px;
+  bottom: 28px;
+  left: 42px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: rgba(242, 239, 226, .36);
+  font-size: 8px;
+}
+.juhra-sign-in-footer-line { width: 34px; height: 1px; background: rgba(232, 175, 76, .58); }
+.juhra-sign-in-footer-bar span:last-child { margin-left: auto; color: rgba(143, 215, 208, .46); }
+
+@media (max-width: 760px) {
+  .juhra-sign-in-header { padding: 22px 20px; }
+  .juhra-sign-in-status { font-size: 7px; }
+  .juhra-sign-in-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: min(calc(100% - 48px), 380px);
+    gap: 16px;
+    padding: 76px 0 58px;
+  }
+  .juhra-sign-in-story {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+  .juhra-sign-in-eyebrow { justify-content: center; }
+  .juhra-sign-in-story h1 { font-size: clamp(42px, 14vw, 65px); }
+  .juhra-sign-in-story p { margin: 16px auto 0; font-size: 12px; }
+  .juhra-sign-in-story-rule { justify-content: center; margin-top: 14px; }
+  .juhra-sign-in-panel { padding: 18px 15px 14px; }
+  .juhra-sign-in-heading { margin-top: 14px; }
+  .juhra-sign-in-providers { margin-top: 15px; }
+  .juhra-sign-in-provider { min-height: 36px; }
+  .juhra-sign-in-divider { margin: 13px 0 12px; }
+  .juhra-sign-in-input-wrap { min-height: 38px; }
+  .juhra-sign-in-submit { min-height: 39px; }
+  .juhra-sign-in-footer-bar { right: 20px; bottom: 18px; left: 20px; }
+  .juhra-sign-in-footer-bar span:last-child { display: none; }
+}
+
+@media (max-width: 410px) {
+  .juhra-sign-in-status { display: none; }
+  .juhra-sign-in-providers { grid-template-columns: 1fr; }
+  .juhra-sign-in-provider { min-height: 36px; }
+  .juhra-sign-in-divider { margin: 12px 0 11px; }
+}
+
+@media (max-height: 680px) and (min-width: 761px) {
+  .juhra-sign-in-header { padding: 16px 28px; }
+  .juhra-sign-in-layout { width: min(1120px, calc(100% - 56px)); padding: 52px 0 42px; }
+  .juhra-sign-in-story h1 { margin-top: 13px; font-size: clamp(40px, 5vw, 58px); }
+  .juhra-sign-in-story p { margin-top: 14px; font-size: 11px; }
+  .juhra-sign-in-story-rule { margin-top: 24px; }
+  .juhra-sign-in-panel { width: min(390px, 100%); padding: 18px 22px 14px; }
+  .juhra-sign-in-heading { margin-top: 12px; }
+  .juhra-sign-in-lede { margin-top: 3px; }
+  .juhra-sign-in-providers { margin-top: 12px; }
+  .juhra-sign-in-provider { min-height: 34px; }
+  .juhra-sign-in-divider { margin: 12px 0 10px; }
+  .juhra-sign-in-form { gap: 9px; }
+  .juhra-sign-in-input-wrap { min-height: 35px; }
+  .juhra-sign-in-actions { margin-top: 3px; }
+  .juhra-sign-in-submit { min-height: 36px; }
+  .juhra-sign-in-footer { margin-top: 11px; }
+  .juhra-sign-in-footer-bar { right: 28px; bottom: 15px; left: 28px; }
+}
+
+@media (max-width: 760px) and (max-height: 700px) {
+  .juhra-sign-in-header { padding: 16px 18px; }
+  .juhra-sign-in-story { display: none; }
+  .juhra-sign-in-layout { padding: 58px 0 48px; }
+  .juhra-sign-in-footer-bar { bottom: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .juhra-sign-in-backdrop { transform: none; }
+  .juhra-sign-in-video { display: none; }
+  .juhra-sign-in-provider,
+  .juhra-sign-in-submit { transition: none; }
+}

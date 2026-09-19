@@ -1,0 +1,28 @@
+.reference-shell.reference-game-blue-echo,
+.reference-settings-modal.reference-game-blue-echo {
+  --game-accent: #7ad6d2;
+  --game-accent-hover: #9ae7e2;
+  --game-accent-soft: rgba(122, 214, 210, .14);
+  --game-on-accent: #0b1c1d;
+  --game-surface: #0e1b1d;
+  --game-radius: 7px;
+}
+
+.reference-game-rail-blue-echo,
+.reference-game-mark-blue-echo,
+.reference-settings-game-badge-blue-echo {
+  color: #7ad6d2;
+}
+
+.reference-shell.reference-game-blue-echo .reference-game-rail-blue-echo,
+.reference-shell.reference-game-blue-echo .reference-game-mark-blue-echo,
+.reference-shell.reference-game-blue-echo .reference-settings-game-blue-echo.is-active,
+.reference-shell.reference-game-blue-echo .reference-settings-game-badge-blue-echo,
+.reference-settings-modal.reference-game-blue-echo .reference-settings-game-blue-echo.is-active {
+  color: var(--game-accent);
+}
+
+.reference-shell.reference-game-blue-echo .reference-settings-game-blue-echo.is-active,
+.reference-settings-modal.reference-game-blue-echo .reference-settings-game-blue-echo.is-active {
+  background: var(--game-accent-soft);
+}

@@ -1,0 +1,28 @@
+.reference-shell.reference-game-red-assembly,
+.reference-settings-modal.reference-game-red-assembly {
+  --game-accent: #ef6c5d;
+  --game-accent-hover: #ff8172;
+  --game-accent-soft: rgba(239, 108, 93, .14);
+  --game-on-accent: #190d0c;
+  --game-surface: #1a1011;
+  --game-radius: 5px;
+}
+
+.reference-game-rail-red-assembly,
+.reference-game-mark-red-assembly,
+.reference-settings-game-badge-red-assembly {
+  color: #ef6c5d;
+}
+
+.reference-shell.reference-game-red-assembly .reference-game-rail-red-assembly,
+.reference-shell.reference-game-red-assembly .reference-game-mark-red-assembly,
+.reference-shell.reference-game-red-assembly .reference-settings-game-red-assembly.is-active,
+.reference-shell.reference-game-red-assembly .reference-settings-game-badge-red-assembly,
+.reference-settings-modal.reference-game-red-assembly .reference-settings-game-red-assembly.is-active {
+  color: var(--game-accent);
+}
+
+.reference-shell.reference-game-red-assembly .reference-settings-game-red-assembly.is-active,
+.reference-settings-modal.reference-game-red-assembly .reference-settings-game-red-assembly.is-active {
+  background: var(--game-accent-soft);
+}

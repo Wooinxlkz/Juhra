@@ -1,0 +1,28 @@
+.reference-shell.reference-game-ashen-reach,
+.reference-settings-modal.reference-game-ashen-reach {
+  --game-accent: #eab24e;
+  --game-accent-hover: #ffc86c;
+  --game-accent-soft: rgba(234, 178, 78, .14);
+  --game-on-accent: #15120e;
+  --game-surface: #17130e;
+  --game-radius: 5px;
+}
+
+.reference-game-rail-ashen-reach,
+.reference-game-mark-ashen-reach,
+.reference-settings-game-badge-ashen-reach {
+  color: #eab24e;
+}
+
+.reference-shell.reference-game-ashen-reach .reference-game-rail-ashen-reach,
+.reference-shell.reference-game-ashen-reach .reference-game-mark-ashen-reach,
+.reference-shell.reference-game-ashen-reach .reference-settings-game-ashen-reach.is-active,
+.reference-shell.reference-game-ashen-reach .reference-settings-game-badge-ashen-reach,
+.reference-settings-modal.reference-game-ashen-reach .reference-settings-game-ashen-reach.is-active {
+  color: var(--game-accent);
+}
+
+.reference-shell.reference-game-ashen-reach .reference-settings-game-ashen-reach.is-active,
+.reference-settings-modal.reference-game-ashen-reach .reference-settings-game-ashen-reach.is-active {
+  background: var(--game-accent-soft);
+}

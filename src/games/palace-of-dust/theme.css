@@ -1,0 +1,28 @@
+.reference-shell.reference-game-palace-of-dust,
+.reference-settings-modal.reference-game-palace-of-dust {
+  --game-accent: #c4a3e8;
+  --game-accent-hover: #d9c1f4;
+  --game-accent-soft: rgba(196, 163, 232, .14);
+  --game-on-accent: #18121f;
+  --game-surface: #15111c;
+  --game-radius: 4px;
+}
+
+.reference-game-rail-palace-of-dust,
+.reference-game-mark-palace-of-dust,
+.reference-settings-game-badge-palace-of-dust {
+  color: #c4a3e8;
+}
+
+.reference-shell.reference-game-palace-of-dust .reference-game-rail-palace-of-dust,
+.reference-shell.reference-game-palace-of-dust .reference-game-mark-palace-of-dust,
+.reference-shell.reference-game-palace-of-dust .reference-settings-game-palace-of-dust.is-active,
+.reference-shell.reference-game-palace-of-dust .reference-settings-game-badge-palace-of-dust,
+.reference-settings-modal.reference-game-palace-of-dust .reference-settings-game-palace-of-dust.is-active {
+  color: var(--game-accent);
+}
+
+.reference-shell.reference-game-palace-of-dust .reference-settings-game-palace-of-dust.is-active,
+.reference-settings-modal.reference-game-palace-of-dust .reference-settings-game-palace-of-dust.is-active {
+  background: var(--game-accent-soft);
+}
