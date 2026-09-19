@@ -60,11 +60,9 @@
   flex-direction: column;
   align-items: center;
   isolation: isolate;
-  background: rgba(12, 15, 18, .30);
+  background: rgba(13, 16, 19, .84);
   border-right: 1px solid rgba(255, 255, 255, .16);
   box-shadow: inset 1px 0 rgba(255, 255, 255, .06), inset -1px 0 rgba(0, 0, 0, .18), 8px 0 28px rgba(0, 0, 0, .12);
-  backdrop-filter: blur(12px) saturate(145%) brightness(.98);
-  -webkit-backdrop-filter: blur(12px) saturate(145%) brightness(.98);
 }
 
 .reference-rail::after {
@@ -180,11 +178,16 @@
   top: 50%;
   left: calc(100% + 10px);
   z-index: 100;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.reference-tooltip-surface {
+  display: inline-block;
   min-height: 26px;
   padding: 7px 9px;
   color: #f4f0e8;
   white-space: nowrap;
-  pointer-events: none;
   background: rgba(20, 22, 26, .96);
   border: 1px solid rgba(255, 255, 255, .14);
   border-radius: 5px;
@@ -193,7 +196,6 @@
   font-size: 9px;
   letter-spacing: .06em;
   line-height: 1.2;
-  transform: translateY(-50%);
 }
 
 .reference-rail-divider {
@@ -232,14 +234,17 @@
   pointer-events: auto;
 }
 
-/* Fills the empty band of the topbar so the window can be dragged from
-   anywhere that isn't an actual button — Juhra runs with no native title
-   bar (decorations: false, no maximize button at all), so this is the
-   only way to move the window. Sits behind the title/actions in stacking
-   order (DOM order) so clicks on real controls still reach them. */
+/* Drag handle for moving the frameless window. Deliberately narrow and
+   pinned to the left (behind the title, where there's always empty
+   space) instead of covering the full topbar — the in-game tab bar and
+   the account/social dropdowns also live in this same top strip, and a
+   full-width drag region risks sitting over them. */
 .reference-topbar-draghandle {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100%;
   z-index: 0;
   -webkit-app-region: drag;
 }
@@ -824,13 +829,11 @@
   display: flex;
   gap: 3px;
   padding: 4px;
-  background: rgba(12, 15, 18, .30);
+  background: rgba(15, 18, 21, .88);
   border: 1px solid rgba(255, 255, 255, .16);
   border-radius: 14px;
   box-shadow: inset 0 1px rgba(255, 255, 255, .06), inset 0 -1px rgba(0, 0, 0, .18), 0 8px 24px rgba(0, 0, 0, .12);
   transform: translateX(-50%);
-  backdrop-filter: blur(12px) saturate(145%) brightness(.98);
-  -webkit-backdrop-filter: blur(12px) saturate(145%) brightness(.98);
 }
 
 .reference-hub-tabs button {
@@ -1714,6 +1717,9 @@
   right: 24px;
   z-index: 75;
   width: 235px;
+}
+
+.reference-account-menu-surface {
   padding: 7px;
   background: #1b1d21;
   border: 1px solid rgba(255, 255, 255, .12);
@@ -1777,10 +1783,15 @@
 
 .reference-settings-modal {
   --settings-accent: var(--game-accent);
-  display: flex;
   width: min(930px, calc(100vw - 44px));
   height: min(620px, calc(100vh - 44px));
   min-height: 470px;
+}
+
+.reference-settings-modal-surface {
+  display: flex;
+  width: 100%;
+  height: 100%;
   flex-direction: column;
   overflow: hidden;
   color: #f2f2ed;
@@ -2417,11 +2428,9 @@
 }
 
 .reference-shell.is-light .reference-rail {
-  background: rgba(250, 251, 249, .86);
+  background: rgba(250, 251, 249, .92);
   border-right-color: rgba(23, 32, 31, .13);
   box-shadow: inset 1px 0 rgba(255, 255, 255, .9), inset -1px 0 rgba(23, 32, 31, .04), 8px 0 28px rgba(23, 32, 31, .07);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .reference-shell.is-light .reference-mark,
@@ -2454,7 +2463,7 @@
   background: rgba(23, 32, 31, .13);
 }
 
-.reference-shell.is-light .reference-tooltip {
+.reference-shell.is-light .reference-tooltip-surface {
   color: #17201f;
   background: rgba(255, 255, 255, .97);
   border-color: rgba(23, 32, 31, .14);
@@ -2634,11 +2643,9 @@
 }
 
 .reference-shell.is-light .reference-hub-tabs {
-  background: rgba(255, 255, 255, .55);
+  background: rgba(255, 255, 255, .88);
   border-color: rgba(23, 32, 31, .16);
   box-shadow: inset 0 1px rgba(255, 255, 255, .9), inset 0 -1px rgba(23, 32, 31, .04), 0 8px 24px rgba(23, 32, 31, .08);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .reference-shell.is-light .reference-hub-tabs button.is-active {
@@ -2751,11 +2758,14 @@
   box-shadow: 0 10px 26px rgba(23, 32, 31, .08);
 }
 
-.reference-shell.is-light .reference-overlay-panel,
-.reference-shell.is-light .reference-social-panel,
-.reference-shell.is-light .reference-account-menu,
 .reference-shell.is-light .reference-settings-modal {
   --settings-accent: var(--game-accent);
+}
+
+.reference-shell.is-light .reference-overlay-panel,
+.reference-shell.is-light .reference-social-panel-surface,
+.reference-shell.is-light .reference-account-menu-surface,
+.reference-shell.is-light .reference-settings-modal-surface {
   color: #17201f;
   background: #fff;
   border: 0;
@@ -3092,7 +3102,6 @@
   border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 14px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
-  backdrop-filter: blur(18px);
 }
 
 .reference-theme-toggle:hover {
@@ -3257,6 +3266,13 @@
   height: min(664px, calc(100vh - 8px));
   min-height: 0;
   flex-direction: column;
+}
+
+.reference-social-panel-surface {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
   padding: 10px 10px 14px;
   overflow: hidden;
   color: #f4f4f1;
@@ -3264,10 +3280,9 @@
   border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 13px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
-  backdrop-filter: blur(19px);
 }
 
-.reference-social-panel:not(.is-ingame) {
+.reference-social-panel-surface:not(.is-ingame) {
   padding-right: 0;
 }
 
@@ -3275,6 +3290,9 @@
   width: 232px;
   height: auto;
   min-height: 0;
+}
+
+.reference-social-panel-surface.is-ingame {
   padding: 12px;
   border-radius: 12px;
 }
@@ -3704,6 +3722,9 @@
   top: 59px;
   right: 16px;
   width: 232px;
+}
+
+.reference-account-menu-surface {
   padding: 8px;
   background: rgba(30, 31, 32, .98);
   border-radius: 12px;
@@ -3960,15 +3981,24 @@
   }
 }
 
-/* Shared glass chrome for top controls, rail, and menus */
-.reference-rail,
-.reference-hub-tabs,
-.reference-theme-toggle,
-.reference-status-pill,
-.reference-overlay-panel,
-.reference-social-panel,
-.reference-account-menu,
-.reference-settings-modal {
+/* Shared glass chrome for top controls and rail. Menus/modals/tooltips
+   that animate opacity/scale/transform via Framer Motion get their blur
+   on a separate, non-animated inner "-surface" wrapper instead (see each
+   component below) — animating opacity/transform on the same element
+   that also has backdrop-filter is a known WebView2/Chromium compositor
+   bug that causes flicker and, worse, a paint/hit-test desync where the
+   element becomes unresponsive to clicks. */
+/* .reference-rail, .reference-hub-tabs, and .reference-theme-toggle each
+   contain a child that animates every interaction (a layoutId active-
+   indicator, or a spring-driven toggle thumb). Animating a child's
+   transform inside a backdrop-filtered ancestor is the same known
+   WebView2/Chromium compositor bug as animating the filtered element
+   itself — it forces the blurred backdrop to keep re-sampling every
+   frame, which can flicker and, worse, leave the ancestor's hit-test
+   region stale (clicks stop landing). So these three get a solid,
+   non-blurred background instead of backdrop-filter. .reference-status-pill
+   has no animated children, so it keeps the frosted-glass blur safely. */
+.reference-status-pill {
   border-color: rgba(255, 255, 255, .16);
   box-shadow:
     inset 0 1px rgba(255, 255, 255, .08),
@@ -3978,12 +4008,46 @@
   -webkit-backdrop-filter: blur(18px) saturate(145%);
 }
 
+.reference-rail,
+.reference-hub-tabs,
+.reference-theme-toggle {
+  border-color: rgba(255, 255, 255, .16);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, .08),
+    inset 0 -1px rgba(0, 0, 0, .2),
+    0 14px 38px rgba(0, 0, 0, .24);
+}
+
+.reference-overlay-panel,
+.reference-social-panel-surface,
+.reference-account-menu-surface,
+.reference-settings-modal-surface,
+.reference-tooltip-surface {
+  border-color: rgba(255, 255, 255, .16);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, .08),
+    inset 0 -1px rgba(0, 0, 0, .2),
+    0 14px 38px rgba(0, 0, 0, .24);
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+  border-style: solid;
+  border-width: 1px;
+  /* Promote to its own GPU layer up front instead of letting the
+     compositor re-allocate one mid-animation — the latter is what
+     triggers the WebView2 flicker/unresponsive-click bug. */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
 .reference-rail {
-  background: rgba(12, 15, 18, .46);
+  background: rgba(13, 16, 19, .82);
 }
 
 .reference-hub-tabs,
-.reference-theme-toggle,
+.reference-theme-toggle {
+  background: rgba(18, 22, 25, .88);
+}
+
 .reference-status-pill {
   background: rgba(18, 22, 25, .56);
 }
@@ -3996,10 +4060,10 @@
   background: rgba(255, 255, 255, .1);
 }
 
-.reference-account-menu,
-.reference-social-panel,
+.reference-account-menu-surface,
+.reference-social-panel-surface,
 .reference-overlay-panel,
-.reference-settings-modal {
+.reference-settings-modal-surface {
   background: rgba(18, 22, 25, .68);
 }
 
@@ -4018,7 +4082,7 @@
     0 6px 18px rgba(0, 0, 0, .16);
 }
 
-.reference-tooltip {
+.reference-tooltip-surface {
   background: rgba(18, 22, 25, .72);
   border-color: rgba(255, 255, 255, .16);
   box-shadow:
@@ -4026,16 +4090,26 @@
     0 12px 30px rgba(0, 0, 0, .28);
   backdrop-filter: blur(16px) saturate(145%);
   -webkit-backdrop-filter: blur(16px) saturate(145%);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .reference-shell.is-light .reference-rail,
 .reference-shell.is-light .reference-hub-tabs,
-.reference-shell.is-light .reference-theme-toggle,
+.reference-shell.is-light .reference-theme-toggle {
+  background: rgba(255, 255, 255, .86);
+  border-color: rgba(23, 32, 31, .16);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, .86),
+    inset 0 -1px rgba(23, 32, 31, .05),
+    0 14px 38px rgba(23, 32, 31, .14);
+}
+
 .reference-shell.is-light .reference-status-pill,
 .reference-shell.is-light .reference-overlay-panel,
-.reference-shell.is-light .reference-social-panel,
-.reference-shell.is-light .reference-account-menu,
-.reference-shell.is-light .reference-settings-modal {
+.reference-shell.is-light .reference-social-panel-surface,
+.reference-shell.is-light .reference-account-menu-surface,
+.reference-shell.is-light .reference-settings-modal-surface {
   background: rgba(255, 255, 255, .56);
   border-color: rgba(23, 32, 31, .16);
   box-shadow:

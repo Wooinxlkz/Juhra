@@ -188,7 +188,7 @@ function SidebarTooltip({ label, children }: { label: string; children: ReactNod
             exit={{ opacity: 0, x: -3, scale: .97 }}
             transition={{ duration: .14, ease: 'easeOut' }}
           >
-            {label}
+            <span className="reference-tooltip-surface">{label}</span>
           </motion.span>
         )}
       </AnimatePresence>
@@ -677,10 +677,10 @@ function GameHub({ game }: { game: Game }) {
             <motion.div
               key={tab}
               className="reference-hub-copy"
-              initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
-              transition={{ duration: .28, ease: [.22, .8, .25, 1] }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: .22, ease: [.22, .8, .25, 1] }}
             >
               <div className="reference-kicker">{tab} · {game.genre}</div>
               <h1>{game.title}</h1>
@@ -857,35 +857,37 @@ function FriendsPanel({ mode, activeGame, tab, onTabChange, onClose }: { mode: S
       style={{ transformOrigin: 'top right' }}
       className={`reference-social-panel ${mode === 'in-game' ? 'is-ingame' : ''}`}
     >
-      {mode === 'in-game' ? (
-        <InGameView activeGame={activeGame} onClose={onClose} />
-      ) : (
-        <>
-          <div className="reference-social-profile">
-            <RiotAvatar size="small" />
-            <span>
-              <strong>190cm 87kg 20cm</strong>
-              <small>Online</small>
-            </span>
-            <button onClick={onClose} aria-label="Close social panel"><ChevronLeft size={15} /></button>
-          </div>
-          <SocialTabs tab={tab} onChange={onTabChange} />
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={tab}
-              className="reference-social-tab-content"
-              initial={{ opacity: 0, x: 8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -8 }}
-              transition={{ duration: .2, ease: 'easeOut' }}
-            >
-              {tab === 'friends' && <FriendsView activeGame={activeGame} />}
-              {tab === 'chat' && <ChatView />}
-              {tab === 'add' && <AddFriendView />}
-            </motion.div>
-          </AnimatePresence>
-        </>
-      )}
+      <div className={`reference-social-panel-surface ${mode === 'in-game' ? 'is-ingame' : ''}`}>
+        {mode === 'in-game' ? (
+          <InGameView activeGame={activeGame} onClose={onClose} />
+        ) : (
+          <>
+            <div className="reference-social-profile">
+              <RiotAvatar size="small" />
+              <span>
+                <strong>190cm 87kg 20cm</strong>
+                <small>Online</small>
+              </span>
+              <button onClick={onClose} aria-label="Close social panel"><ChevronLeft size={15} /></button>
+            </div>
+            <SocialTabs tab={tab} onChange={onTabChange} />
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={tab}
+                className="reference-social-tab-content"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: .2, ease: 'easeOut' }}
+              >
+                {tab === 'friends' && <FriendsView activeGame={activeGame} />}
+                {tab === 'chat' && <ChatView />}
+                {tab === 'add' && <AddFriendView />}
+              </motion.div>
+            </AnimatePresence>
+          </>
+        )}
+      </div>
     </motion.aside>
   );
 }
@@ -898,23 +900,25 @@ function AccountMenu({ onClose, onNavigate, onSignOut }: { onClose: () => void; 
       exit={{ opacity: 0, y: -8 }}
       className="reference-account-menu"
     >
-      <div className="reference-account-menu-profile">
-        <RiotAvatar size="large" />
-        <span><strong>190cm 87kg 20cm<span className="reference-name-tag">#King</span></strong><small>Online</small></span>
+      <div className="reference-account-menu-surface">
+        <div className="reference-account-menu-profile">
+          <RiotAvatar size="large" />
+          <span><strong>190cm 87kg 20cm<span className="reference-name-tag">#King</span></strong><small>Online</small></span>
+        </div>
+        {[
+          ['Account Details', '/profile'],
+          ['Account Security', '/settings'],
+          ['Settings', '/settings'],
+          ["What's New", '/'],
+        ].map(([label, path]) => (
+          <button key={label} onClick={() => { onNavigate(path); onClose(); }}>
+            {label}
+            <ArrowUpRight size={13} />
+          </button>
+        ))}
+        <button className="reference-account-danger" onClick={onSignOut}>Sign Out</button>
+        <button className="reference-account-exit" onClick={onClose}>Exit</button>
       </div>
-      {[
-        ['Account Details', '/profile'],
-        ['Account Security', '/settings'],
-        ['Settings', '/settings'],
-        ["What's New", '/'],
-      ].map(([label, path]) => (
-        <button key={label} onClick={() => { onNavigate(path); onClose(); }}>
-          {label}
-          <ArrowUpRight size={13} />
-        </button>
-      ))}
-      <button className="reference-account-danger" onClick={onSignOut}>Sign Out</button>
-      <button className="reference-account-exit" onClick={onClose}>Exit</button>
     </motion.div>
   );
 }
@@ -928,45 +932,47 @@ function GameMenu({ activeGame, onClose, onNavigate }: { activeGame: Game | null
       className="reference-account-menu reference-game-menu"
       role="menu"
     >
-      <div className="reference-account-menu-profile reference-game-menu-heading">
-        <span className="reference-game-menu-icon"><Gamepad2 size={18} /></span>
-        <span>
-          <strong>Game library</strong>
-          <small>{activeGame ? `Playing ${activeGame.title}` : 'Choose a world'}</small>
-        </span>
+      <div className="reference-account-menu-surface">
+        <div className="reference-account-menu-profile reference-game-menu-heading">
+          <span className="reference-game-menu-icon"><Gamepad2 size={18} /></span>
+          <span>
+            <strong>Game library</strong>
+            <small>{activeGame ? `Playing ${activeGame.title}` : 'Choose a world'}</small>
+          </span>
+        </div>
+        <div className="reference-game-menu-list">
+          {games.map((game) => (
+            <button
+              key={game.id}
+              type="button"
+              role="menuitem"
+              className={`reference-game-menu-item ${activeGame?.id === game.id ? 'is-active' : ''}`}
+              onClick={() => {
+                onNavigate(`/games/${game.id}`);
+                onClose();
+              }}
+            >
+              <span className={`reference-game-mark reference-game-mark-${game.id}`}>{game.glyph}</span>
+              <span>
+                <strong>{game.title}</strong>
+                <small>{game.status}</small>
+              </span>
+              {activeGame?.id === game.id && <span className="reference-game-menu-current">CURRENT</span>}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="reference-game-menu-all"
+          onClick={() => {
+            onNavigate('/games');
+            onClose();
+          }}
+        >
+          Browse all games
+          <ArrowUpRight size={13} />
+        </button>
       </div>
-      <div className="reference-game-menu-list">
-        {games.map((game) => (
-          <button
-            key={game.id}
-            type="button"
-            role="menuitem"
-            className={`reference-game-menu-item ${activeGame?.id === game.id ? 'is-active' : ''}`}
-            onClick={() => {
-              onNavigate(`/games/${game.id}`);
-              onClose();
-            }}
-          >
-            <span className={`reference-game-mark reference-game-mark-${game.id}`}>{game.glyph}</span>
-            <span>
-              <strong>{game.title}</strong>
-              <small>{game.status}</small>
-            </span>
-            {activeGame?.id === game.id && <span className="reference-game-menu-current">CURRENT</span>}
-          </button>
-        ))}
-      </div>
-      <button
-        type="button"
-        className="reference-game-menu-all"
-        onClick={() => {
-          onNavigate('/games');
-          onClose();
-        }}
-      >
-        Browse all games
-        <ArrowUpRight size={13} />
-      </button>
     </motion.div>
   );
 }
@@ -1024,7 +1030,7 @@ function SettingsModal({ onClose, activeGame }: { onClose: () => void; activeGam
       }}
     >
       <motion.section
-        className={`reference-settings-modal ${contextGame ? 'has-game-context reference-game-context reference-game-${contextGame.id}' : ''}`}
+        className={`reference-settings-modal ${contextGame ? `has-game-context reference-game-context reference-game-${contextGame.id}` : ''}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="reference-settings-title"
@@ -1034,6 +1040,7 @@ function SettingsModal({ onClose, activeGame }: { onClose: () => void; activeGam
         transition={{ duration: .2, ease: 'easeOut' }}
         onMouseDown={(event) => event.stopPropagation()}
       >
+        <div className="reference-settings-modal-surface">
         <header className="reference-settings-header">
           <h2 id="reference-settings-title">Settings</h2>
           <button type="button" onClick={onClose} aria-label="Close settings"><X size={16} /></button>
@@ -1179,6 +1186,7 @@ function SettingsModal({ onClose, activeGame }: { onClose: () => void; activeGam
               </div>
             )}
           </main>
+        </div>
         </div>
       </motion.section>
     </motion.div>

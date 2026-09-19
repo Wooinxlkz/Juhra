@@ -7,6 +7,39 @@ Tailwind CSS v4.
 The project uses the same toolchain and build pipeline as the Xuro desktop app
 (Bun + Vite + Rust/Cargo + Tauri), trimmed down to what a game client needs.
 
+## v0.1.2 fixes
+
+- Fixed a real bug: the settings modal's per-game accent class was written
+  as `'...${contextGame.id}'` (single quotes — the interpolation never
+  ran). Now a proper template literal.
+- Split every dropdown/panel that both animates (Framer Motion
+  opacity/scale/transform) **and** uses `backdrop-filter` into two
+  layers: an outer element that only handles position/animation, and a
+  static inner `-surface` element that carries the blur. Animating
+  opacity/transform on the same element as `backdrop-filter` is a known
+  WebView2/Chromium compositor bug that causes flicker and, worse, a
+  paint/hit-test desync where the element stops responding to clicks.
+  Applied to: the account menu, the game menu, the settings modal, and
+  the friends panel (which also had backdrop-filter applied twice —
+  removed the duplicate).
+- Removed an animated `filter: blur()` transition on the in-game tab
+  content — animating `filter` is one of the most GPU-expensive things
+  you can animate and was a likely cause of the top tab bar feeling
+  unresponsive when clicked in quick succession.
+- Shrunk the window drag region from covering the full topbar down to a
+  220px strip on the left (behind the title, where there's always empty
+  space) so it can't ever sit over the in-game tab bar or the account/
+  social dropdowns, which live in the same top strip.
+- Follow-up pass: found that the sidebar rail, the in-game tab bar
+  container itself, and the theme toggle also had `backdrop-filter`
+  while containing a child that animates on every interaction (a
+  layoutId active-indicator, or a spring-driven toggle thumb) — same bug
+  family, just one level up (ancestor has the blur, child animates).
+  Removed `backdrop-filter` from those three and compensated with a more
+  opaque solid background so they don't look flat without the blur.
+- Logo reprocessed and reinstalled again from the source image (same
+  upload, verified byte-identical to previous rounds via hash).
+
 ## Window behavior
 
 Juhra runs frameless, like the Riot Games client — no native title bar at
