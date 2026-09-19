@@ -19,6 +19,49 @@
   inset: 0;
 }
 
+/* Juhra runs with no native title bar (decorations: false, no maximize
+   button at all), so the sign-in screen needs its own drag region and
+   minimize/close controls, same as the main app shell. */
+.juhra-sign-in-draghandle {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 44px;
+  z-index: 20;
+  -webkit-app-region: drag;
+}
+
+.juhra-window-controls {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  z-index: 21;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+}
+
+.juhra-window-button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: rgba(246, 241, 231, .78);
+  background: rgba(7, 16, 20, .3);
+  border-radius: 6px;
+  -webkit-app-region: no-drag;
+}
+
+.juhra-window-button:hover {
+  background: rgba(246, 241, 231, .14);
+  color: #f6f1e7;
+}
+
+.juhra-window-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
 .juhra-sign-in-backdrop {
   z-index: -4;
   background-position: center;

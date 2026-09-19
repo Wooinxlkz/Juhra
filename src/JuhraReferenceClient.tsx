@@ -11,6 +11,7 @@ import {
   List,
   LogOut,
   MessageCircle,
+  Minus,
   Play,
   Search,
   Settings,
@@ -24,6 +25,7 @@ import {
   Moon,
 } from 'lucide-react';
 import { Link, Router as WouterRouter, useLocation } from 'wouter';
+import { minimizeWindow, closeWindow } from './lib/window-controls';
 import './reference-client.css';
 import type { GameTheme } from './games/types';
 import { ashenReachTheme } from './games/ashen-reach/theme';
@@ -305,7 +307,8 @@ function Topbar({
 }) {
   return (
     <header className="reference-topbar">
-      <div className="reference-topbar-title">{title}</div>
+      <div className="reference-topbar-draghandle" data-tauri-drag-region="" />
+      <div className="reference-topbar-title" data-tauri-drag-region="">{title}</div>
       <div className="reference-topbar-actions">
         <ThemeToggle theme={theme} onToggle={onThemeToggle} />
         <div className="reference-status-pill" aria-label="Social and account controls">
@@ -318,6 +321,24 @@ function Topbar({
           </button>
           <button className="reference-status-exit" onClick={onFriends} aria-label="Open friends and chat">
             <LogOut size={13} />
+          </button>
+        </div>
+        <div className="reference-window-controls" aria-label="Window controls">
+          <button
+            type="button"
+            className="reference-window-button reference-window-minimize"
+            onClick={() => void minimizeWindow()}
+            aria-label="Minimize window"
+          >
+            <Minus size={14} />
+          </button>
+          <button
+            type="button"
+            className="reference-window-button reference-window-close"
+            onClick={() => void closeWindow()}
+            aria-label="Close window"
+          >
+            <X size={14} />
           </button>
         </div>
       </div>

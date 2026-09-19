@@ -9,8 +9,19 @@ The project uses the same toolchain and build pipeline as the Xuro desktop app
 
 ## Window behavior
 
-The main window intentionally has **no maximize button** — only minimize and
-close, set via `"maximizable": false` in `src-tauri/tauri.conf.json`.
+Juhra runs frameless, like the Riot Games client — no native title bar at
+all, so there's no maximize button anywhere (not just disabled/greyed out).
+The app draws its own minimize/close controls (top-right of the topbar, and
+on the sign-in screen) wired to the Tauri window API in
+`src/lib/window-controls.ts`. The window is fixed at 1280×720 and cannot be
+resized (`"resizable": false`), matching a Riot-client-style launcher.
+
+Relevant config in `src-tauri/tauri.conf.json`:
+- `"decorations": false` — no OS title bar/buttons
+- `"resizable": false`, `"maximizable": false` — fixed size, locked
+- `"width"/"height": 1280/720` with matching min/max — hard-locks the size
+- `"backgroundColor": "#0b0d11"` — avoids a white flash while the webview
+  paints its first frame on startup
 
 ## Development
 

@@ -232,6 +232,53 @@
   pointer-events: auto;
 }
 
+/* Fills the empty band of the topbar so the window can be dragged from
+   anywhere that isn't an actual button — Juhra runs with no native title
+   bar (decorations: false, no maximize button at all), so this is the
+   only way to move the window. Sits behind the title/actions in stacking
+   order (DOM order) so clicks on real controls still reach them. */
+.reference-topbar-draghandle {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  -webkit-app-region: drag;
+}
+
+.reference-topbar-title,
+.reference-topbar-actions {
+  position: relative;
+  z-index: 1;
+}
+
+.reference-window-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 1px solid rgba(255, 255, 255, .12);
+}
+
+.reference-window-button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: rgba(255, 255, 255, .72);
+  border-radius: 6px;
+  -webkit-app-region: no-drag;
+}
+
+.reference-window-button:hover {
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+}
+
+.reference-window-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
 .reference-topbar-title {
   margin-left: 40px;
   color: #fff;
@@ -2422,6 +2469,24 @@
 .reference-shell.is-light .reference-topbar-icon,
 .reference-shell.is-light .reference-account-trigger {
   color: #25322e;
+}
+
+.reference-shell.is-light .reference-window-controls {
+  border-left-color: rgba(23, 32, 31, .14);
+}
+
+.reference-shell.is-light .reference-window-button {
+  color: rgba(23, 32, 31, .72);
+}
+
+.reference-shell.is-light .reference-window-button:hover {
+  background: rgba(23, 32, 31, .08);
+  color: #17201f;
+}
+
+.reference-shell.is-light .reference-window-close:hover {
+  background: #e81123;
+  color: #fff;
 }
 
 .reference-shell.is-light .reference-topbar-icon:hover {

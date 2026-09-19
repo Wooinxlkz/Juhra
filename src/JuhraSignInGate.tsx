@@ -6,12 +6,15 @@ import {
   EyeOff,
   KeyRound,
   Mail,
+  Minus,
   ShieldCheck,
   Sparkles,
+  X,
 } from 'lucide-react';
 import { SiDiscord, SiEpicgames, SiSteam } from 'react-icons/si';
 import loginBackgroundVideo from '../assets/generated_videos/juhra-login-background.mp4';
 import fallbackArtwork from '../assets/generated_images/juhra-home-enchanted.png';
+import { minimizeWindow, closeWindow } from './lib/window-controls';
 import './juhra-sign-in-gate.css';
 
 type JuhraSignInGateProps = {
@@ -59,6 +62,25 @@ export default function JuhraSignInGate({ onSkip }: JuhraSignInGateProps) {
       transition={{ duration: 0.55, ease: 'easeOut' }}
       data-testid="screen-sign-in-gate"
     >
+      <div className="juhra-sign-in-draghandle" data-tauri-drag-region="" />
+      <div className="juhra-window-controls" aria-label="Window controls">
+        <button
+          type="button"
+          className="juhra-window-button juhra-window-minimize"
+          onClick={() => void minimizeWindow()}
+          aria-label="Minimize window"
+        >
+          <Minus size={14} />
+        </button>
+        <button
+          type="button"
+          className="juhra-window-button juhra-window-close"
+          onClick={() => void closeWindow()}
+          aria-label="Close window"
+        >
+          <X size={14} />
+        </button>
+      </div>
       <div
         className={`juhra-sign-in-backdrop ${videoReady ? 'is-video-ready' : ''}`}
         style={{ backgroundImage: `url(${fallbackArtwork})` }}
