@@ -187,6 +187,7 @@ function SidebarTooltip({ label, children }: { label: string; children: ReactNod
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -3, scale: .97 }}
             transition={{ duration: .14, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
           >
             <span className="reference-tooltip-surface">{label}</span>
           </motion.span>
@@ -681,6 +682,7 @@ function GameHub({ game }: { game: Game }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: .22, ease: [.22, .8, .25, 1] }}
+              style={{ willChange: 'transform, opacity' }}
             >
               <div className="reference-kicker">{tab} · {game.genre}</div>
               <h1>{game.title}</h1>
@@ -853,8 +855,8 @@ function FriendsPanel({ mode, activeGame, tab, onTabChange, onClose }: { mode: S
       initial={{ opacity: 0, scaleX: .42, scaleY: .08 }}
       animate={{ opacity: 1, scaleX: 1, scaleY: 1 }}
       exit={{ opacity: 0, scaleX: .42, scaleY: .08 }}
-      transition={{ type: 'spring', stiffness: 420, damping: 32, mass: .72 }}
-      style={{ transformOrigin: 'top right' }}
+      transition={{ duration: .24, ease: [.16, .84, .32, 1] }}
+      style={{ transformOrigin: 'top right', willChange: 'transform, opacity' }}
       className={`reference-social-panel ${mode === 'in-game' ? 'is-ingame' : ''}`}
     >
       <div className={`reference-social-panel-surface ${mode === 'in-game' ? 'is-ingame' : ''}`}>
@@ -899,6 +901,7 @@ function AccountMenu({ onClose, onNavigate, onSignOut }: { onClose: () => void; 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       className="reference-account-menu"
+      style={{ willChange: 'transform, opacity' }}
     >
       <div className="reference-account-menu-surface">
         <div className="reference-account-menu-profile">
@@ -931,6 +934,7 @@ function GameMenu({ activeGame, onClose, onNavigate }: { activeGame: Game | null
       exit={{ opacity: 0, y: -8 }}
       className="reference-account-menu reference-game-menu"
       role="menu"
+      style={{ willChange: 'transform, opacity' }}
     >
       <div className="reference-account-menu-surface">
         <div className="reference-account-menu-profile reference-game-menu-heading">
@@ -1038,6 +1042,7 @@ function SettingsModal({ onClose, activeGame }: { onClose: () => void; activeGam
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 12, scale: .98 }}
         transition={{ duration: .2, ease: 'easeOut' }}
+        style={{ willChange: 'transform, opacity' }}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="reference-settings-modal-surface">

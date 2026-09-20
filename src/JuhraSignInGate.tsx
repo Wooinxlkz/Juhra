@@ -138,6 +138,7 @@ export default function JuhraSignInGate({ onSkip }: JuhraSignInGateProps) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0.18, duration: 0.65, ease: [0.22, 0.8, 0.25, 1] }}
           aria-labelledby="juhra-sign-in-title"
+          style={{ willChange: 'transform, opacity' }}
         >
           <div className="juhra-sign-in-panel-surface">
           <div className="juhra-sign-in-panel-glint" aria-hidden="true" />

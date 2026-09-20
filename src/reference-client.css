@@ -871,7 +871,8 @@
 .reference-hub-copy {
   top: 24%;
   bottom: auto;
-  will-change: transform, opacity, filter;
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }
 
 .reference-hub-play-area {
