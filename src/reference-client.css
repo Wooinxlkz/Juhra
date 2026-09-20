@@ -3779,6 +3779,12 @@
 
 .reference-game-menu {
   top: 59px;
+  /* Explicit rather than relying on inheriting `right` from
+     .reference-account-menu — the two used to share a value only by
+     cascade coincidence, which is exactly what let them render on top of
+     one another. Pinned here explicitly now that JuhraReferenceClient.tsx
+     also guarantees only one of the two is ever mounted at a time. */
+  right: 16px;
   width: 248px;
 }
 
@@ -3919,6 +3925,8 @@
 
   .reference-game-menu {
     top: 47px;
+    right: 8px;
+    width: min(248px, calc(100vw - 16px));
   }
 
   .reference-settings-backdrop {

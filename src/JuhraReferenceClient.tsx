@@ -1226,8 +1226,17 @@ function Client() {
   const [friendsOpen, setFriendsOpen] = useState(false);
   const [socialMode, setSocialMode] = useState<SocialMode>('friends');
   const [socialTab, setSocialTab] = useState<SocialTab>('friends');
-  const [accountOpen, setAccountOpen] = useState(false);
-  const [gameMenuOpen, setGameMenuOpen] = useState(false);
+  // AccountMenu and GameMenu are anchored to the exact same fixed
+  // top-right corner (see .reference-account-menu / .reference-game-menu
+  // in reference-client.css — the latter inherits `top`/`right` from the
+  // former). They used to be two independent booleans, which let Framer
+  // Motion mount and cross-fade both of them at once when switching
+  // straight from one trigger to the other — two menus animating on top
+  // of each other in the identical spot reads as a flicker/glitch. A
+  // single mutually-exclusive state, rendered through one
+  // `mode="wait"` AnimatePresence below, guarantees the outgoing menu
+  // has fully finished its exit animation before the next one mounts.
+  const [topMenu, setTopMenu] = useState<'account' | 'game' | null>(null);
   const [signedOut, setSignedOut] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsGame, setSettingsGame] = useState<Game | null>(null);
@@ -1243,25 +1252,21 @@ function Client() {
     setSocialMode(mode);
     setSocialTab(tab);
     setFriendsOpen(true);
-    setAccountOpen(false);
-    setGameMenuOpen(false);
+    setTopMenu(null);
   };
   const toggleAccount = () => {
-    setAccountOpen((open) => !open);
+    setTopMenu((current) => (current === 'account' ? null : 'account'));
     setFriendsOpen(false);
-    setGameMenuOpen(false);
   };
   const toggleGameMenu = () => {
-    setGameMenuOpen((open) => !open);
+    setTopMenu((current) => (current === 'game' ? null : 'game'));
     setFriendsOpen(false);
-    setAccountOpen(false);
   };
   const openSettings = () => {
     setSettingsGame(currentGame);
     setSettingsOpen(true);
-    setAccountOpen(false);
+    setTopMenu(null);
     setFriendsOpen(false);
-    setGameMenuOpen(false);
   };
   const navigateFromAccount = (nextPath: string) => {
     if (nextPath === '/settings') {
@@ -1309,10 +1314,21 @@ function Client() {
             </div>
             <MobileRail path={path} />
             <AnimatePresence>
-              {friendsOpen && <FriendsPanel mode={socialMode} activeGame={selectedGame} tab={socialTab} onTabChange={setSocialTab} onClose={() => setFriendsOpen(false)} />}
-              {accountOpen && <AccountMenu onClose={() => setAccountOpen(false)} onNavigate={navigateFromAccount} onSignOut={() => { setAccountOpen(false); setSignedOut(true); }} />}
-              {gameMenuOpen && <GameMenu activeGame={currentGame} onClose={() => setGameMenuOpen(false)} onNavigate={setPath} />}
-              {settingsOpen && <SettingsModal activeGame={settingsGame} onClose={() => setSettingsOpen(false)} />}
+              {friendsOpen && <FriendsPanel key="friends-panel" mode={socialMode} activeGame={selectedGame} tab={socialTab} onTabChange={setSocialTab} onClose={() => setFriendsOpen(false)} />}
+              {settingsOpen && <SettingsModal key="settings-modal" activeGame={settingsGame} onClose={() => setSettingsOpen(false)} />}
+            </AnimatePresence>
+            {/* AccountMenu and GameMenu share one fixed screen anchor (see the
+                state comment above), so they get their own `mode="wait"`
+                AnimatePresence: the open one always finishes exiting before
+                the other is allowed to mount, instead of both cross-fading
+                on top of each other in the same spot. */}
+            <AnimatePresence mode="wait" initial={false}>
+              {topMenu === 'account' && (
+                <AccountMenu key="account-menu" onClose={() => setTopMenu(null)} onNavigate={navigateFromAccount} onSignOut={() => { setTopMenu(null); setSignedOut(true); }} />
+              )}
+              {topMenu === 'game' && (
+                <GameMenu key="game-menu" activeGame={currentGame} onClose={() => setTopMenu(null)} onNavigate={setPath} />
+              )}
             </AnimatePresence>
     </motion.div>
   );
