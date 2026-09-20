@@ -351,7 +351,7 @@
 
 .reference-account-copy small {
   margin-top: 2px;
-  color: rgba(255, 255, 255, .4);
+  color: rgba(255, 255, 255, .5);
   font-size: 8px;
   letter-spacing: .14em;
 }
@@ -601,7 +601,7 @@
 
 .reference-story-copy span,
 .reference-story-copy p {
-  color: rgba(255, 255, 255, .43);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 8px;
   letter-spacing: .11em;
@@ -731,7 +731,7 @@
 }
 
 .reference-large-game-footer span {
-  color: rgba(255, 255, 255, .43);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 8px;
   text-transform: uppercase;
@@ -1229,7 +1229,7 @@
 
 .reference-merch-card > small {
   padding-bottom: 13px;
-  color: rgba(255, 255, 255, .42);
+  color: rgba(255, 255, 255, .5);
   font-size: 10px;
 }
 
@@ -1348,7 +1348,7 @@
 }
 
 .reference-discussion-copy small {
-  color: rgba(255, 255, 255, .42);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 9px;
 }
@@ -1371,7 +1371,7 @@
 .reference-community-sidebar > span {
   display: block;
   margin-bottom: 9px;
-  color: rgba(255, 255, 255, .42);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 9px;
   letter-spacing: .08em;
@@ -1417,11 +1417,10 @@
   color: #fff;
   text-align: left;
   min-width: 0;
-  background: rgba(13, 15, 18, .88);
+  background: rgba(13, 15, 18, .92);
   border: 1px solid rgba(255, 255, 255, .14);
   border-radius: 5px;
   box-shadow: 0 10px 26px rgba(0, 0, 0, .24);
-  backdrop-filter: blur(7px);
   transition: border-color .2s ease, transform .2s ease, background .2s ease, box-shadow .2s ease;
 }
 
@@ -1571,7 +1570,7 @@
 .reference-overlay-header small {
   display: block;
   margin-top: 4px;
-  color: rgba(255, 255, 255, .42);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 8px;
   text-transform: uppercase;
@@ -1593,7 +1592,7 @@
 
 .reference-friends-tabs button {
   padding: 8px;
-  color: rgba(255, 255, 255, .4);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 8px;
   text-transform: uppercase;
@@ -1610,7 +1609,7 @@
   align-items: center;
   gap: 8px;
   padding: 0 10px;
-  color: rgba(255, 255, 255, .35);
+  color: rgba(255, 255, 255, .5);
   background: rgba(255, 255, 255, .05);
   border-radius: 4px;
 }
@@ -1665,13 +1664,13 @@
 }
 
 .reference-friend-row small {
-  color: rgba(255, 255, 255, .4);
+  color: rgba(255, 255, 255, .5);
   font-size: 9px;
 }
 
 .reference-friend-row > svg {
   margin-left: auto;
-  color: rgba(255, 255, 255, .28);
+  color: rgba(255, 255, 255, .5);
 }
 
 .reference-party-card {
@@ -1871,7 +1870,7 @@
 
 .reference-settings-group-label {
   margin: 0 9px 8px;
-  color: rgba(255, 255, 255, .35);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 8px;
   font-weight: 800;
@@ -1886,7 +1885,7 @@
   align-items: center;
   gap: 10px;
   padding: 0 10px;
-  color: rgba(255, 255, 255, .43);
+  color: rgba(255, 255, 255, .5);
   border-radius: 3px;
   font-size: 11px;
   text-align: left;
@@ -1935,7 +1934,7 @@
   gap: 4px;
   margin-top: auto;
   padding: 18px 9px 0;
-  color: rgba(255, 255, 255, .24);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 7px;
   letter-spacing: .12em;
@@ -1943,7 +1942,7 @@
 }
 
 .reference-settings-sidebar-footer small {
-  color: rgba(255, 255, 255, .16);
+  color: rgba(255, 255, 255, .5);
   font-size: 7px;
   letter-spacing: .04em;
 }
@@ -1982,7 +1981,7 @@
 
 .reference-settings-version {
   padding-top: 4px;
-  color: rgba(255, 255, 255, .27);
+  color: rgba(255, 255, 255, .5);
   font-family: var(--app-font-mono);
   font-size: 8px;
   letter-spacing: .14em;
@@ -2025,7 +2024,7 @@
 
 .reference-settings-intro p {
   margin: 4px 0 0;
-  color: rgba(255, 255, 255, .43);
+  color: rgba(255, 255, 255, .5);
   font-size: 11px;
   line-height: 1.5;
 }
@@ -2053,7 +2052,7 @@
 
 .reference-settings-row-copy span,
 .reference-settings-select-row small {
-  color: rgba(255, 255, 255, .4);
+  color: rgba(255, 255, 255, .5);
   font-size: 10px;
   line-height: 1.45;
 }
@@ -2410,7 +2409,7 @@
     display: grid;
     place-items: center;
     gap: 3px;
-    color: rgba(255, 255, 255, .4);
+    color: rgba(255, 255, 255, .5);
     font-family: var(--app-font-mono);
     font-size: 7px;
   }
@@ -2824,7 +2823,7 @@
 .reference-shell.is-light .reference-settings-version,
 .reference-shell.is-light .reference-settings-sidebar-footer,
 .reference-shell.is-light .reference-settings-sidebar-footer small {
-  color: rgba(23, 32, 31, .43);
+  color: rgba(23, 32, 31, .68);
 }
 
 .reference-shell.is-light .reference-settings-item,
@@ -3097,7 +3096,7 @@
   align-items: center;
   padding: 3px;
   overflow: hidden;
-  color: rgba(255, 255, 255, .38);
+  color: rgba(255, 255, 255, .5);
   background: rgba(24, 28, 29, .82);
   border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 14px;
@@ -3669,7 +3668,7 @@
   align-items: center;
   gap: 5px;
   padding: 0 8px;
-  color: rgba(255, 255, 255, .38);
+  color: rgba(255, 255, 255, .5);
   background: rgba(255, 255, 255, .055);
   border-radius: 6px;
 }
@@ -3743,7 +3742,7 @@
 }
 
 .reference-name-tag {
-  color: rgba(255, 255, 255, .43);
+  color: rgba(255, 255, 255, .5);
   font-weight: 700;
 }
 
@@ -3829,7 +3828,7 @@
 }
 
 .reference-game-menu-item small {
-  color: rgba(255, 255, 255, .42);
+  color: rgba(255, 255, 255, .5);
   font-size: 9px;
   font-weight: 500;
 }
@@ -3867,7 +3866,7 @@
 }
 
 .reference-shell.is-light .reference-game-menu-item small {
-  color: rgba(23, 32, 31, .5);
+  color: rgba(23, 32, 31, .68);
 }
 
 .reference-shell.is-light .reference-game-menu-current {

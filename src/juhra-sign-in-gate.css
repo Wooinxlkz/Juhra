@@ -259,6 +259,11 @@
   grid-area: 1 / 1;
   position: relative;
   width: min(380px, 100%);
+}
+
+.juhra-sign-in-panel-surface {
+  position: relative;
+  width: 100%;
   overflow: hidden;
   padding: 20px 22px 17px;
   background: linear-gradient(145deg, rgba(20, 29, 31, .78), rgba(10, 17, 20, .72));
@@ -267,6 +272,13 @@
   box-shadow: 0 26px 90px rgba(0, 0, 0, .42), inset 0 1px rgba(255, 255, 255, .1);
   backdrop-filter: blur(17px) saturate(120%);
   -webkit-backdrop-filter: blur(17px) saturate(120%);
+  /* Promote to its own GPU layer up front rather than letting the
+     compositor re-allocate one mid-animation — the outer .juhra-sign-in-panel
+     fades/scales in on mount, and animating that while a descendant has
+     backdrop-filter is the WebView2 flicker/hit-test-desync bug. Keeping
+     the blur on this separate, non-animated wrapper avoids it. */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .juhra-sign-in-panel::before,
@@ -430,7 +442,7 @@
   letter-spacing: 0;
   text-transform: none;
 }
-.juhra-sign-in-input-wrap input::placeholder { color: rgba(232, 237, 221, .3); }
+.juhra-sign-in-input-wrap input::placeholder { color: rgba(232, 237, 221, .55); }
 .juhra-sign-in-password-toggle {
   display: grid;
   width: 24px;

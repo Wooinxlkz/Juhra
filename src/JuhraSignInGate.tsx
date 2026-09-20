@@ -46,6 +46,19 @@ export default function JuhraSignInGate({ onSkip }: JuhraSignInGateProps) {
     void video.play().catch(() => {
       setVideoReady(false);
     });
+
+    // Explicit teardown on unmount. React removing the <video> node from
+    // the DOM should be enough on its own, but WebView2 has been known to
+    // leave a looping, actively-decoding video's GPU session alive a beat
+    // longer than that if it isn't paused and released first — pause,
+    // drop the source, and call load() to force it to actually let go
+    // before the sign-in screen unmounts (immediately, once signed in;
+    // this component isn't wrapped in AnimatePresence).
+    return () => {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    };
   }, [prefersReducedMotion]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -126,6 +139,7 @@ export default function JuhraSignInGate({ onSkip }: JuhraSignInGateProps) {
           transition={{ delay: 0.18, duration: 0.65, ease: [0.22, 0.8, 0.25, 1] }}
           aria-labelledby="juhra-sign-in-title"
         >
+          <div className="juhra-sign-in-panel-surface">
           <div className="juhra-sign-in-panel-glint" aria-hidden="true" />
           <div className="juhra-sign-in-panel-topline">
             <span>PLAYER ACCESS</span>
@@ -226,6 +240,7 @@ export default function JuhraSignInGate({ onSkip }: JuhraSignInGateProps) {
               {providerMessage}
             </p>
           )}
+          </div>
         </motion.section>
       </div>
 
