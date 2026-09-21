@@ -12,6 +12,15 @@ Juhra is a desktop game client — browse, discover, manage, and launch your gam
 - [Compliance Audit](legal/COMPLIANCE_AUDIT.md)
 - [License](LICENSE)
 
+## Releases
+
+- [Changelog](CHANGELOG.md) — what changed in each version.
+- Windows installers are published automatically by
+  [the release workflow](.github/workflows/release.yml) whenever a
+  `vX.Y.Z` tag is pushed, and show up under this repo's **Releases**
+  tab with auto-generated notes attached.
+
+
 ## Ownership & rights
 
 Juhra is proprietary software. This repository/archive is **not** provided for redistribution, forking, or building unofficial copies. See [LICENSE](LICENSE) for the full terms — in short: no cloning, no redistribution, no reverse engineering, no using the Juhra name or artwork for your own product, without the Author's prior written permission.

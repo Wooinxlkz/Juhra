@@ -1403,12 +1403,26 @@ function GameHub({ game }: { game: Game }) {
           </button>
         ))}
       </nav>
-      {isPatchNotes ? (
-        <PatchNotesContent game={game} />
-      ) : isMerch ? (
-        <MerchContent game={game} />
-      ) : isCommunity ? (
-        <CommunityContent game={game} />
+      {isSecondaryTab ? (
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={tab}
+            className="reference-hub-tab-panel"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: .22, ease: [.22, .8, .25, 1] }}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            {isPatchNotes ? (
+              <PatchNotesContent game={game} />
+            ) : isMerch ? (
+              <MerchContent game={game} />
+            ) : (
+              <CommunityContent game={game} />
+            )}
+          </motion.div>
+        </AnimatePresence>
       ) : (
         <>
           <AnimatePresence mode="wait" initial={false}>

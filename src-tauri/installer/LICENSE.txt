@@ -1,0 +1,116 @@
+JUHRA PROPRIETARY SOFTWARE LICENSE
+
+Copyright (c) 2025–present Karim. All rights reserved.
+
+Contact: karimsc01t@gmail.com
+Jurisdiction: Algeria
+
+This software, including its source code, compiled binaries, assets,
+artwork, branding, and all associated files (collectively, the
+"Software"), is the proprietary and confidential property of Karim
+("the Author"). The Software is licensed, not sold. No rights are
+granted except those expressly stated below.
+
+1. NOT OPEN SOURCE
+
+   This is NOT an open-source license. The presence of source code in
+   this repository or archive is for the Author's own development and
+   distribution purposes only, and does not grant any recipient a
+   license to use that source code except as expressly permitted below.
+
+2. LIMITED LICENSE TO END USERS
+
+   If you have obtained a compiled, official release of the Software
+   (e.g. an installer distributed by the Author), you are granted a
+   personal, non-exclusive, non-transferable, revocable license to
+   install and run that compiled Software for your own personal,
+   non-commercial use, subject to the Juhra Terms of Service
+   (legal/TERMS_OF_SERVICE.md). This license does NOT extend to the
+   source code itself.
+
+3. PROHIBITED USES
+
+   Except where applicable law grants you a right that cannot be
+   waived by this license, you may NOT, without prior written
+   permission from the Author:
+
+   a. Copy, fork, clone, mirror, or redistribute this source code or
+      any substantial part of it, in whole or in part, in any form;
+   b. Build, compile, or produce a working copy of the Software from
+      this source code for any purpose other than the Author's own
+      development;
+   c. Reverse engineer, decompile, or disassemble any compiled
+      distribution of the Software;
+   d. Modify the Software and distribute the modified version, whether
+      for free or for a fee;
+   e. Use the Software, its source code, or any of its assets to
+      create a derivative or competing product;
+   f. Remove, obscure, or alter any copyright, trademark, or
+      attribution notice contained in the Software;
+   g. Use the "Juhra" name, wordmark, helmet-mark logo, or any
+      confusingly similar branding to represent your own product,
+      service, or fork;
+   h. Sublicense, sell, rent, lease, or otherwise transfer any right
+      granted under this license to any third party;
+   i. Use the Software or its source in any commercial product or
+      service without a separate, explicit written agreement with the
+      Author.
+
+4. NO BUILD/DISTRIBUTION INSTRUCTIONS ARE PROVIDED
+
+   The Author does not provide, and is under no obligation to provide,
+   instructions, scripts, or support for building this Software from
+   source for any purpose other than the Author's own release process.
+   The absence of such instructions is intentional and is not a defect.
+
+5. THIRD-PARTY COMPONENTS
+
+   The Software incorporates third-party open-source components (for
+   example: Tauri, React, and other packages listed in package.json /
+   Cargo.toml), each of which remains licensed under its own
+   respective open-source license. Nothing in this license restricts
+   your rights under those components' own licenses with respect to
+   those components specifically, considered in isolation from the
+   rest of the Software. This license governs the Juhra-specific
+   source code, assets, and branding authored by or for the Author —
+   not the third-party dependencies themselves.
+
+6. INTELLECTUAL PROPERTY
+
+   All right, title, and interest in and to the Software, including
+   all intellectual property rights therein, remain with the Author.
+   This license does not transfer any ownership rights to you.
+
+7. TERMINATION
+
+   This license terminates automatically, without notice, if you
+   breach any of its terms. Upon termination, you must destroy all
+   copies of the Software in your possession.
+
+8. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+   NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+   CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS
+   USE, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.
+
+9. GOVERNING LAW
+
+   This license is governed by the laws of Algeria, without regard to
+   conflict-of-law principles, except where mandatory law in your own
+   jurisdiction provides rights that cannot be waived.
+
+10. CONTACT / LICENSING INQUIRIES
+
+    For permission requests, commercial licensing, or any use not
+    covered above, contact: karimsc01t@gmail.com
+
+---
+
+If you were given access to this repository or archive for a specific,
+limited purpose (e.g. a contractor building a release on the Author's
+behalf), your rights are limited to that specific purpose only, as
+separately agreed with the Author in writing, and this license does
+not expand them.

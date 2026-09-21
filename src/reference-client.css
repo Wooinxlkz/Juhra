@@ -409,6 +409,17 @@
   background: linear-gradient(90deg, rgba(7, 11, 14, .46) 0%, rgba(7, 11, 14, .18) 42%, rgba(7, 11, 14, .04) 78%), linear-gradient(0deg, rgba(5, 7, 9, .56), transparent 50%);
 }
 
+/* Plain transparent wrapper around Patch Notes / Merch / Community so all
+   three fade in/out the same way GameHub's Overview copy already did —
+   previously they had no transition at all and just popped in/out
+   instantly when switching tabs. Each child (.reference-patch-notes,
+   .reference-merch, .reference-community) keeps its own positioning, so
+   this just needs to get out of the way layout-wise. */
+.reference-hub-tab-panel {
+  display: block;
+  width: 100%;
+}
+
 .reference-home-copy,
 .reference-hub-copy {
   position: absolute;
@@ -1473,6 +1484,12 @@
   margin-bottom: 18px;
 }
 
+.reference-community-discussions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .reference-community-hint {
   display: flex;
   align-items: center;
@@ -1673,6 +1690,13 @@
   font-size: 10px;
   letter-spacing: .04em;
   text-transform: uppercase;
+}
+
+/* Wraps both the open-discussion detail view and the open-guide detail
+   view (DiscussionsSection / GuidesSection) — just a max-width reading
+   column, everything else is on the children. */
+.reference-community-thread {
+  max-width: 680px;
 }
 
 .reference-community-back:hover {
@@ -2006,6 +2030,12 @@
 }
 
 /* Guides */
+
+.reference-community-guides {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
 .reference-guides-grid {
   display: grid;

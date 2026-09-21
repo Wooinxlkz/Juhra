@@ -1,4 +1,4 @@
-# Juhra Compliance Audit — v0.1.3
+# Juhra Compliance Audit — v0.1.3 (original pass), updated through v0.1.7
 
 This documents what was actually checked in the codebase, what was found, and what was fixed. It's written to be verifiable against the source, not a generic checklist — every line item below references the actual file/component involved. Where something is out of scope for a code audit (business registration, real legal review, a live payment processor's terms), that's stated explicitly rather than glossed over.
 
@@ -54,7 +54,16 @@ Computed actual WCAG 2.1 contrast ratios (not visual estimation) for every `colo
 - No email-sending functionality exists in the app yet, so there is nothing to unsubscribe from today.
 - Process and response-time commitments for when email/accounts are added are documented in [DATA_DELETION_REQUESTS.md](DATA_DELETION_REQUESTS.md), including the requirement that marketing unsubscribes never silently cut off required transactional email, and vice versa.
 
-## What this audit does **not** cover
+## Update — through v0.1.7 (app icon, system tray, Community rebuild)
+
+Re-ran the same checks (SDK/network-call search, `localStorage`/telemetry search) against everything added since the v0.1.3 pass above. Nothing below changes any conclusion in that original audit.
+
+- **App/installer icon replaced** (`src-tauri/icons/*`) — a visual asset swap only, no code or data-handling change. Same open item as the "Images & video — licensing" finding above applies to the new icon artwork too: it was produced from an AI-generated source image, so before any commercial launch, confirm its provenance/commercial-use rights the same way as the other generated assets.
+- **Windows system tray icon + menu** (`src-tauri/src/lib.rs`) — adds a native OS tray icon and menu (game switcher, Settings, Sign Out, Exit). Checked for new data collection or network calls: there are none. It communicates with the webview purely through Tauri's local, in-process event system (`app.emit(...)` / `listen(...)`, e.g. `juhra://navigate`) — nothing leaves the machine, no new crate was added to `Cargo.toml`.
+- **Community tab rebuilt** (Discussions, Suggestions, Reviews, Guides — `src/JuhraReferenceClient.tsx`) — re-ran the `fetch(`/`axios`/`localStorage`/`analytics` search specifically against this new code: none present. All posts, replies, votes, and reviews live in in-memory React `useState` only and are lost on navigating away — nothing is written to disk, sent anywhere, or persisted between launches. The seeded example content (authors like "Mara Voss", "kestrel_dev", "ceed") is the same kind of clearly-fictional placeholder content flagged under "Dark patterns / fake reviews" above, extended to the three new sections — none of it is presented as a real user, real rating, or real review count.
+- **Conclusion unchanged:** Google Fonts (consent-gated) remains the only third party Juhra talks to, as of v0.1.7.
+
+
 
 Being direct about the boundary of what a code-level audit can actually verify:
 - **Business registration / trade license status in Algeria** — a legal/administrative question, not a code one.
