@@ -1,6 +1,6 @@
 [package]
 name = "Juhra"
-version = "0.1.5"
+version = "0.1.6"
 description = "Juhra game client"
 authors = ["Juhra"]
 license = "UNLICENSED"

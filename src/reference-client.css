@@ -1401,6 +1401,678 @@
   font-size: 9px;
 }
 
+/* ---------------------------------------------------------------------
+   Community tab v2 — sub-nav (Discussions / Suggestions / Reviews /
+   Guides), composers, votes, reviews and guide cards. Reuses the same
+   tokens as the rest of the page (--game-accent, #17191c panels,
+   rgba(255,255,255,.08-.12) borders, var(--app-font-mono) for labels)
+   so it reads as part of the same app rather than a bolted-on widget.
+   ------------------------------------------------------------------ */
+
+.reference-community-sidebar-compact {
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  padding: 10px 16px;
+  gap: 16px;
+}
+
+.reference-community-sidebar-compact div {
+  margin-top: 0;
+}
+
+.reference-community-online-dot {
+  color: #59d88f;
+}
+
+.reference-community-subnav {
+  display: flex;
+  gap: 4px;
+  margin-top: 28px;
+  padding: 4px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 9px;
+}
+
+.reference-community-subnav button {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  color: rgba(255, 255, 255, .55);
+  border-radius: 6px;
+  font-family: var(--app-font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  transition: color .16s ease, background .16s ease;
+}
+
+.reference-community-subnav button:hover {
+  color: rgba(255, 255, 255, .85);
+}
+
+.reference-community-subnav button.is-active {
+  color: #101112;
+  background: var(--game-accent, #f4f4f0);
+}
+
+.reference-community-layout-single {
+  display: block;
+  padding-top: 26px;
+}
+
+.reference-community-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.reference-community-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: rgba(255, 255, 255, .5);
+  font-size: 11px;
+}
+
+.reference-community-hint svg {
+  flex: 0 0 auto;
+  color: var(--game-accent);
+}
+
+.reference-community-sort {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 7px;
+}
+
+.reference-community-sort button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  color: rgba(255, 255, 255, .5);
+  border-radius: 5px;
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.reference-community-sort button.is-active {
+  color: #fff;
+  background: rgba(255, 255, 255, .1);
+}
+
+/* Composers (new discussion / suggestion / review / guide) */
+
+.reference-community-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reference-community-composer-thread {
+  padding: 16px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 8px;
+}
+
+.reference-community-composer input[type="text"],
+.reference-community-composer textarea {
+  width: 100%;
+  padding: 10px 12px;
+  color: #fff;
+  background: rgba(0, 0, 0, .28);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.reference-community-composer input[type="text"]::placeholder,
+.reference-community-composer textarea::placeholder {
+  color: rgba(255, 255, 255, .35);
+}
+
+.reference-community-composer input[type="text"]:focus,
+.reference-community-composer textarea:focus {
+  border-color: color-mix(in srgb, var(--game-accent, #fff) 55%, transparent);
+  outline: none;
+}
+
+.reference-community-composer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reference-community-composer-row-end {
+  justify-content: flex-end;
+}
+
+.reference-community-composer-row > button,
+.reference-community-composer > button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  color: #101112;
+  background: var(--game-accent, #f4f4f0);
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  transition: filter .15s ease, opacity .15s ease;
+}
+
+.reference-community-composer-row > button:hover,
+.reference-community-composer > button:hover {
+  filter: brightness(1.08);
+}
+
+.reference-community-composer-row > button:disabled,
+.reference-community-composer > button:disabled {
+  cursor: not-allowed;
+  opacity: .4;
+  filter: none;
+}
+
+.reference-community-tag-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reference-community-tag-picker button {
+  padding: 6px 11px;
+  color: rgba(255, 255, 255, .55);
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 20px;
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  letter-spacing: .03em;
+}
+
+.reference-community-tag-picker button.is-active {
+  color: #101112;
+  background: var(--game-accent, #f4f4f0);
+  border-color: transparent;
+}
+
+/* Category / type tags shown on rows and detail headers */
+
+.reference-community-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  margin-right: 8px;
+  color: rgba(255, 255, 255, .68);
+  background: rgba(255, 255, 255, .08);
+  border-radius: 20px;
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.reference-community-tag.tag-bug-reports { color: #ff9d8a; background: rgba(255, 108, 74, .16); }
+.reference-community-tag.tag-help { color: #8ac8ff; background: rgba(74, 150, 255, .16); }
+.reference-community-tag.tag-fan-content { color: #d6a4ff; background: rgba(168, 92, 255, .16); }
+.reference-community-tag.tag-general { color: rgba(255, 255, 255, .68); background: rgba(255, 255, 255, .08); }
+.reference-community-tag.tag-beginner { color: #7fe0a8; background: rgba(70, 200, 130, .16); }
+.reference-community-tag.tag-advanced { color: #ffb26b; background: rgba(255, 150, 60, .16); }
+.reference-community-tag.tag-walkthrough { color: #8ac8ff; background: rgba(74, 150, 255, .16); }
+
+/* Discussion rows (list view) reuse .reference-discussion-row already
+   defined above; only the pin badge is new. */
+
+.reference-community-pin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  margin-right: 8px;
+  color: var(--game-accent, #f4f4f0);
+  background: color-mix(in srgb, var(--game-accent, #fff) 16%, transparent);
+  border-radius: 20px;
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* Thread / guide detail view */
+
+.reference-community-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, .55);
+  font-family: var(--app-font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.reference-community-back:hover {
+  color: #fff;
+}
+
+.reference-community-thread-post {
+  padding-bottom: 22px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.reference-community-thread-post-head {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.reference-community-thread-post h1 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: clamp(22px, 3vw, 30px);
+  letter-spacing: -.03em;
+  line-height: 1.15;
+}
+
+.reference-community-thread-post > p {
+  max-width: 640px;
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, .68);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.reference-community-thread-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255, 255, 255, .5);
+  font-size: 11px;
+}
+
+.reference-community-thread-meta strong {
+  color: rgba(255, 255, 255, .85);
+  font-weight: 700;
+}
+
+.reference-community-vote {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  margin-left: auto;
+  color: rgba(255, 255, 255, .65);
+  background: rgba(255, 255, 255, .07);
+  border-radius: 20px;
+  font-family: var(--app-font-mono);
+  font-size: 10px;
+  transition: color .15s ease, background .15s ease;
+}
+
+.reference-community-vote:hover {
+  color: var(--game-accent, #fff);
+  background: color-mix(in srgb, var(--game-accent, #fff) 16%, transparent);
+}
+
+.reference-community-replies {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reference-community-reply {
+  display: flex;
+  gap: 10px;
+}
+
+.reference-community-reply-arrow {
+  flex: 0 0 auto;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, .3);
+}
+
+.reference-community-reply p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, .68);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* Suggestions */
+
+.reference-community-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reference-suggestion-row {
+  display: flex;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.reference-suggestion-votes {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 44px;
+}
+
+.reference-suggestion-votes button {
+  display: grid;
+  width: 30px;
+  height: 26px;
+  place-items: center;
+  color: rgba(255, 255, 255, .45);
+  border-radius: 6px;
+  transition: color .15s ease, background .15s ease;
+}
+
+.reference-suggestion-votes button:hover {
+  background: rgba(255, 255, 255, .07);
+}
+
+.reference-suggestion-votes button.is-active {
+  color: var(--game-accent, #fff);
+  background: color-mix(in srgb, var(--game-accent, #fff) 16%, transparent);
+}
+
+.reference-suggestion-votes strong {
+  color: #fff;
+  font-family: var(--app-font-mono);
+  font-size: 13px;
+}
+
+.reference-suggestion-copy {
+  min-width: 0;
+}
+
+.reference-suggestion-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.reference-suggestion-head strong {
+  color: #fff;
+  font-size: 14px;
+}
+
+.reference-suggestion-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  color: rgba(255, 255, 255, .6);
+  background: rgba(255, 255, 255, .08);
+  border-radius: 20px;
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.reference-suggestion-status.status-shipped {
+  color: #7fe0a8;
+  background: rgba(70, 200, 130, .16);
+}
+
+.reference-suggestion-status.status-planned {
+  color: #8ac8ff;
+  background: rgba(74, 150, 255, .16);
+}
+
+.reference-suggestion-status.status-under-review {
+  color: rgba(255, 255, 255, .6);
+  background: rgba(255, 255, 255, .08);
+}
+
+.reference-suggestion-copy p {
+  margin: 0 0 8px;
+  color: rgba(255, 255, 255, .62);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.reference-suggestion-copy small {
+  color: rgba(255, 255, 255, .42);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+}
+
+/* Reviews */
+
+.reference-star-row {
+  display: inline-flex;
+  gap: 2px;
+  color: rgba(255, 255, 255, .25);
+}
+
+.reference-star-row .is-filled {
+  color: #ffc857;
+}
+
+.reference-community-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.reference-reviews-summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 28px;
+  padding: 20px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 8px;
+}
+
+.reference-reviews-average {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-right: 26px;
+  border-right: 1px solid rgba(255, 255, 255, .1);
+}
+
+.reference-reviews-average strong {
+  color: #fff;
+  font-size: 34px;
+  letter-spacing: -.03em;
+}
+
+.reference-reviews-average span {
+  color: rgba(255, 255, 255, .45);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.reference-reviews-histogram {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.reference-reviews-histogram-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 20px;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, .5);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+}
+
+.reference-reviews-histogram-track {
+  height: 5px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .08);
+  border-radius: 3px;
+}
+
+.reference-reviews-histogram-fill {
+  height: 100%;
+  background: var(--game-accent, #ffc857);
+  border-radius: 3px;
+  transition: width .3s ease;
+}
+
+.reference-star-picker {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, .3);
+}
+
+.reference-star-picker button.is-filled {
+  color: #ffc857;
+}
+
+.reference-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.reference-review-row {
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.reference-review-row .reference-star-row {
+  margin: 8px 0;
+}
+
+.reference-review-row p {
+  margin: 0 0 10px;
+  color: rgba(255, 255, 255, .68);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.reference-review-helpful {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  color: rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, .06);
+  border-radius: 20px;
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.reference-review-helpful.is-active {
+  color: var(--game-accent, #fff);
+  background: color-mix(in srgb, var(--game-accent, #fff) 18%, transparent);
+}
+
+/* Guides */
+
+.reference-guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.reference-guide-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 18px;
+  text-align: left;
+  background: #17191c;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 8px;
+  transition: border-color .2s ease, transform .2s ease;
+}
+
+.reference-guide-card:hover {
+  border-color: color-mix(in srgb, var(--game-accent, #fff) 50%, transparent);
+  transform: translateY(-2px);
+}
+
+.reference-guide-card strong {
+  display: -webkit-box;
+  margin: 10px 0 6px;
+  overflow: hidden;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.reference-guide-card p {
+  display: -webkit-box;
+  margin: 0 0 12px;
+  overflow: hidden;
+  color: rgba(255, 255, 255, .55);
+  font-size: 11px;
+  line-height: 1.55;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.reference-guide-card small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: auto;
+  color: rgba(255, 255, 255, .42);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+}
+
+.reference-guide-views {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  color: rgba(255, 255, 255, .45);
+  font-family: var(--app-font-mono);
+  font-size: 10px;
+}
+
 .reference-hub-news {
   position: absolute;
   right: 24px;
@@ -2357,6 +3029,27 @@
     gap: 24px;
   }
 
+  .reference-community-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reference-reviews-summary {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .reference-reviews-average {
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+    padding-bottom: 16px;
+  }
+
+  .reference-guides-grid {
+    grid-template-columns: 1fr;
+  }
+
   .reference-discussion-copy strong {
     white-space: normal;
   }
@@ -2749,6 +3442,133 @@
 .reference-shell.is-light .reference-discussion-replies,
 .reference-shell.is-light .reference-community-sidebar div {
   color: rgba(23, 32, 31, .76);
+}
+
+/* Community tab v2 — light theme */
+
+.reference-shell.is-light .reference-community-subnav,
+.reference-shell.is-light .reference-community-sort,
+.reference-shell.is-light .reference-community-composer-thread,
+.reference-shell.is-light .reference-reviews-summary {
+  background: rgba(23, 32, 31, .045);
+  border-color: rgba(23, 32, 31, .12);
+}
+
+.reference-shell.is-light .reference-community-subnav button,
+.reference-shell.is-light .reference-community-sort button,
+.reference-shell.is-light .reference-community-hint,
+.reference-shell.is-light .reference-community-thread-meta,
+.reference-shell.is-light .reference-community-back,
+.reference-shell.is-light .reference-suggestion-copy small,
+.reference-shell.is-light .reference-reviews-average span,
+.reference-shell.is-light .reference-reviews-histogram-row,
+.reference-shell.is-light .reference-guide-card small,
+.reference-shell.is-light .reference-guide-views {
+  color: rgba(23, 32, 31, .68);
+}
+
+.reference-shell.is-light .reference-community-subnav button:hover,
+.reference-shell.is-light .reference-community-back:hover {
+  color: #17201f;
+}
+
+.reference-shell.is-light .reference-community-subnav button.is-active {
+  color: #fff;
+  background: var(--game-accent, #17201f);
+}
+
+.reference-shell.is-light .reference-community-sort button.is-active {
+  color: #17201f;
+  background: rgba(23, 32, 31, .1);
+}
+
+.reference-shell.is-light .reference-community-composer input[type="text"],
+.reference-shell.is-light .reference-community-composer textarea {
+  color: #17201f;
+  background: rgba(255, 255, 255, .7);
+  border-color: rgba(23, 32, 31, .16);
+}
+
+.reference-shell.is-light .reference-community-composer input[type="text"]::placeholder,
+.reference-shell.is-light .reference-community-composer textarea::placeholder {
+  color: rgba(23, 32, 31, .4);
+}
+
+.reference-shell.is-light .reference-community-composer-row > button,
+.reference-shell.is-light .reference-community-composer > button {
+  color: #fff;
+  background: var(--game-accent, #17201f);
+}
+
+.reference-shell.is-light .reference-community-tag-picker button {
+  color: rgba(23, 32, 31, .65);
+  background: rgba(23, 32, 31, .06);
+  border-color: rgba(23, 32, 31, .14);
+}
+
+.reference-shell.is-light .reference-community-tag-picker button.is-active {
+  color: #fff;
+  background: var(--game-accent, #17201f);
+}
+
+.reference-shell.is-light .reference-community-thread-post,
+.reference-shell.is-light .reference-suggestion-row,
+.reference-shell.is-light .reference-review-row {
+  border-bottom-color: rgba(23, 32, 31, .13);
+}
+
+.reference-shell.is-light .reference-community-thread-post h1,
+.reference-shell.is-light .reference-suggestion-head strong,
+.reference-shell.is-light .reference-guide-card strong {
+  color: #17201f;
+}
+
+.reference-shell.is-light .reference-community-thread-post > p,
+.reference-shell.is-light .reference-community-reply p,
+.reference-shell.is-light .reference-suggestion-copy p,
+.reference-shell.is-light .reference-review-row p,
+.reference-shell.is-light .reference-guide-card p {
+  color: rgba(23, 32, 31, .74);
+}
+
+.reference-shell.is-light .reference-community-thread-meta strong {
+  color: #17201f;
+}
+
+.reference-shell.is-light .reference-community-vote,
+.reference-shell.is-light .reference-review-helpful,
+.reference-shell.is-light .reference-suggestion-status {
+  color: rgba(23, 32, 31, .65);
+  background: rgba(23, 32, 31, .07);
+}
+
+.reference-shell.is-light .reference-suggestion-votes button {
+  color: rgba(23, 32, 31, .5);
+}
+
+.reference-shell.is-light .reference-suggestion-votes button:hover {
+  background: rgba(23, 32, 31, .07);
+}
+
+.reference-shell.is-light .reference-suggestion-votes strong {
+  color: #17201f;
+}
+
+.reference-shell.is-light .reference-reviews-average strong {
+  color: #17201f;
+}
+
+.reference-shell.is-light .reference-reviews-average {
+  border-right-color: rgba(23, 32, 31, .14);
+}
+
+.reference-shell.is-light .reference-reviews-histogram-track {
+  background: rgba(23, 32, 31, .1);
+}
+
+.reference-shell.is-light .reference-guide-card {
+  background: #fff;
+  border-color: rgba(23, 32, 31, .12);
 }
 
 .reference-shell.is-light .reference-hub-news-card {

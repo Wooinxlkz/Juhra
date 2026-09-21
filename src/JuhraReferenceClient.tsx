@@ -1,21 +1,36 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
+  ArrowBigDown,
+  ArrowBigUp,
   ArrowUpRight,
   Bell,
+  BookOpen,
+  CheckCircle2,
   ChevronDown,
   ChevronLeft,
+  Circle,
+  Clock,
+  CornerDownRight,
+  Eye,
+  Flame,
   Gamepad2,
   Grid2X2,
   Home as HomeIcon,
+  Lightbulb,
   List,
   LogOut,
   MessageCircle,
   Minus,
+  Pin,
   Play,
+  Plus,
   Search,
+  Send,
   Settings,
+  Star,
   Sun,
+  ThumbsUp,
   UserPlus,
   UserRound,
   Users,
@@ -597,46 +612,768 @@ function MerchContent({ game }: { game: Game }) {
   );
 }
 
-function CommunityContent({ game }: { game: Game }) {
-  const discussions = [
-    { title: `What was your first route through ${game.title}?`, author: 'Mara Voss', replies: 18, time: '2h ago' },
-    { title: 'Share your favorite field note', author: 'Jules Ahn', replies: 32, time: '5h ago' },
-    { title: 'Theories for the next chapter', author: 'ceed', replies: 64, time: '1d ago' },
+// ---------------------------------------------------------------------
+// Community tab — Discussions, Suggestions, Reviews, Guides.
+//
+// This is a full, real, click-through UI: posting, replying, voting,
+// rating and publishing all genuinely update what's on screen. But
+// there is no backend anywhere in this app, so none of it is saved —
+// each section's state is seeded fresh (from the mock data below) every
+// time you land on the tab, and lives only in memory for that session.
+// If a real API ever exists, each section's local `useState` is the
+// only thing that needs to be swapped for a data-fetching hook; the
+// UI/interaction layer underneath doesn't need to change.
+// ---------------------------------------------------------------------
+
+type Reply = { id: string; author: string; body: string; time: string; upvotes: number };
+type Thread = {
+  id: string;
+  title: string;
+  body: string;
+  author: string;
+  tag: 'General' | 'Help' | 'Fan Content' | 'Bug Reports';
+  time: string;
+  pinned?: boolean;
+  upvotes: number;
+  replies: Reply[];
+};
+type Suggestion = {
+  id: string;
+  title: string;
+  body: string;
+  author: string;
+  time: string;
+  status: 'Under Review' | 'Planned' | 'Shipped';
+  votes: number;
+  userVote: 1 | -1 | 0;
+};
+type Review = {
+  id: string;
+  author: string;
+  stars: 1 | 2 | 3 | 4 | 5;
+  body: string;
+  time: string;
+  helpful: number;
+  markedHelpful: boolean;
+};
+type Guide = {
+  id: string;
+  title: string;
+  author: string;
+  tag: 'Beginner' | 'Advanced' | 'Walkthrough';
+  views: number;
+  excerpt: string;
+  body: string;
+};
+
+let mockIdCounter = 0;
+const nextMockId = () => `local-${++mockIdCounter}-${Date.now()}`;
+
+function seedThreads(game: Game): Thread[] {
+  return [
+    {
+      id: nextMockId(),
+      title: `Community guidelines for the ${game.title} board`,
+      body: `Quick pin before you dive in: keep spoilers tagged, be kind to new players, and route bug reports to the Bug Reports tag so the team can find them. Everything else is fair game — theories, screenshots, hot takes.`,
+      author: 'Juhra Team',
+      tag: 'General',
+      time: '2w ago',
+      pinned: true,
+      upvotes: 214,
+      replies: [
+        { id: nextMockId(), author: 'ceed', body: 'Appreciate the clarity, thank you!', time: '2w ago', upvotes: 12 },
+      ],
+    },
+    {
+      id: nextMockId(),
+      title: `What was your first route through ${game.title}?`,
+      body: `Curious how everyone's opening hours went — did you rush the main thread or wander off and get lost in side content first? I spent almost three hours before I even hit the first checkpoint.`,
+      author: 'Mara Voss',
+      tag: 'Fan Content',
+      time: '2h ago',
+      upvotes: 41,
+      replies: [
+        { id: nextMockId(), author: 'Jules Ahn', body: 'Wandered immediately, no regrets.', time: '1h ago', upvotes: 9 },
+        { id: nextMockId(), author: 'ceed', body: 'Same, the side stuff is where the good writing is honestly.', time: '48m ago', upvotes: 14 },
+      ],
+    },
+    {
+      id: nextMockId(),
+      title: 'Share your favorite field note',
+      body: `There's a collectible note near the second checkpoint that genuinely got me — no spoilers, but if you know, you know.`,
+      author: 'Jules Ahn',
+      tag: 'Fan Content',
+      time: '5h ago',
+      upvotes: 32,
+      replies: [],
+    },
+    {
+      id: nextMockId(),
+      title: 'Crash on launch after the latest update',
+      body: `Getting a crash to desktop a few seconds after the title screen loads, started right after updating. Anyone else? Logs say nothing useful.`,
+      author: 'kestrel_dev',
+      tag: 'Bug Reports',
+      time: '9h ago',
+      upvotes: 18,
+      replies: [
+        { id: nextMockId(), author: 'Juhra Team', body: "We're on it — can you DM us your log file from the Settings > Support tab?", time: '7h ago', upvotes: 6 },
+      ],
+    },
+    {
+      id: nextMockId(),
+      title: 'Theories for the next chapter',
+      body: `Been chewing on the ending for a week. Anyone else think the whole thing is a loop?`,
+      author: 'ceed',
+      tag: 'General',
+      time: '1d ago',
+      upvotes: 64,
+      replies: [],
+    },
   ];
+}
+
+function seedSuggestions(game: Game): Suggestion[] {
+  return [
+    {
+      id: nextMockId(),
+      title: 'Add a photo mode',
+      body: `${game.title} has some gorgeous vistas — a free-camera photo mode with filters would be huge for the fan-content community.`,
+      author: 'Mara Voss',
+      time: '4d ago',
+      status: 'Planned',
+      votes: 312,
+      userVote: 0,
+    },
+    {
+      id: nextMockId(),
+      title: 'Remappable keybinds for left-handed play',
+      body: 'Currently a few core actions are hardcoded to keys that overlap with movement for southpaw setups.',
+      author: 'kestrel_dev',
+      time: '1w ago',
+      status: 'Shipped',
+      votes: 189,
+      userVote: 0,
+    },
+    {
+      id: nextMockId(),
+      title: 'Colorblind-friendly UI palette option',
+      body: 'A few of the status indicators rely entirely on red/green — an alternate palette would help a lot.',
+      author: 'ceed',
+      time: '2w ago',
+      status: 'Under Review',
+      votes: 97,
+      userVote: 0,
+    },
+    {
+      id: nextMockId(),
+      title: 'New Game+ with carried-over collectibles',
+      body: 'Would love a way to replay with everything I found still in my inventory, even just cosmetics.',
+      author: 'Jules Ahn',
+      time: '3w ago',
+      status: 'Under Review',
+      votes: 76,
+      userVote: 0,
+    },
+  ];
+}
+
+function seedReviews(game: Game): Review[] {
+  return [
+    { id: nextMockId(), author: 'Mara Voss', stars: 5, body: `Best atmosphere I've felt in ${game.genre.toLowerCase()} in years. Slow in the right places.`, time: '3d ago', helpful: 88, markedHelpful: false },
+    { id: nextMockId(), author: 'kestrel_dev', stars: 4, body: 'Excellent, though the back third drags a little compared to the opening.', time: '6d ago', helpful: 41, markedHelpful: false },
+    { id: nextMockId(), author: 'ceed', stars: 5, body: 'Replayed it twice already. The sound design alone is worth the price.', time: '1w ago', helpful: 63, markedHelpful: false },
+    { id: nextMockId(), author: 'kite_moth', stars: 3, body: 'Great ideas, rough performance on lower-end hardware for me.', time: '2w ago', helpful: 19, markedHelpful: false },
+  ];
+}
+
+function seedGuides(game: Game): Guide[] {
+  return [
+    {
+      id: nextMockId(),
+      title: `A no-spoiler starter's guide to ${game.title}`,
+      author: 'Juhra Team',
+      tag: 'Beginner',
+      views: 18400,
+      excerpt: 'Everything you need before your first hour — settings we recommend, and nothing about the story.',
+      body: `Before you start: bump the subtitle size up one notch (trust us), and turn on the optional audio cues in Settings > Accessibility. Take your time in the first area — almost nothing there is missable, so there's no reason to rush.`,
+    },
+    {
+      id: nextMockId(),
+      title: 'Every collectible location, act by act',
+      author: 'kite_moth',
+      tag: 'Walkthrough',
+      views: 9210,
+      excerpt: 'A full act-by-act collectible list with screenshots. Heavy spoilers past the first section.',
+      body: `Act One: 4 collectibles, all in the opening corridor loop — easy to grab on a first pass. Act Two onward gets spoilery, so only keep reading if you've cleared it already...`,
+    },
+    {
+      id: nextMockId(),
+      title: 'Optimal settings for low-end PCs',
+      author: 'kestrel_dev',
+      tag: 'Advanced',
+      views: 5330,
+      excerpt: 'The exact settings combo that got me a stable frame rate on a 6-year-old laptop.',
+      body: `Shadow quality is the single biggest cost — dropping it to Medium alone recovered about 30% of my frame rate with barely any visual difference. Pair that with...`,
+    },
+  ];
+}
+
+const communitySortOptions = [
+  { id: 'top', label: 'Top', icon: Flame },
+  { id: 'new', label: 'New', icon: Clock },
+] as const;
+type CommunitySort = (typeof communitySortOptions)[number]['id'];
+
+function sortThreads(threads: Thread[], sort: CommunitySort): Thread[] {
+  const list = [...threads].sort((a, b) => (sort === 'top' ? b.upvotes - a.upvotes : 0));
+  // Pinned always floats to the top regardless of sort.
+  list.sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned));
+  return list;
+}
+
+function DiscussionsSection({ game }: { game: Game }) {
+  const [threads, setThreads] = useState<Thread[]>(() => seedThreads(game));
+  const [sort, setSort] = useState<CommunitySort>('top');
+  const [openThreadId, setOpenThreadId] = useState<string | null>(null);
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [draftTitle, setDraftTitle] = useState('');
+  const [draftBody, setDraftBody] = useState('');
+  const [draftTag, setDraftTag] = useState<Thread['tag']>('General');
+  const [replyDraft, setReplyDraft] = useState('');
+
+  const openThread = threads.find((t) => t.id === openThreadId) ?? null;
+  const sorted = sortThreads(threads, sort);
+
+  const submitThread = () => {
+    if (!draftTitle.trim()) return;
+    const thread: Thread = {
+      id: nextMockId(),
+      title: draftTitle.trim(),
+      body: draftBody.trim(),
+      author: 'You',
+      tag: draftTag,
+      time: 'just now',
+      upvotes: 0,
+      replies: [],
+    };
+    setThreads((current) => [thread, ...current]);
+    setDraftTitle('');
+    setDraftBody('');
+    setComposerOpen(false);
+    setOpenThreadId(thread.id);
+  };
+
+  const upvoteThread = (id: string) => {
+    setThreads((current) => current.map((t) => (t.id === id ? { ...t, upvotes: t.upvotes + 1 } : t)));
+  };
+
+  const submitReply = () => {
+    if (!replyDraft.trim() || !openThread) return;
+    const reply: Reply = { id: nextMockId(), author: 'You', body: replyDraft.trim(), time: 'just now', upvotes: 0 };
+    setThreads((current) =>
+      current.map((t) => (t.id === openThread.id ? { ...t, replies: [...t.replies, reply] } : t)),
+    );
+    setReplyDraft('');
+  };
+
+  if (openThread) {
+    return (
+      <div className="reference-community-thread">
+        <button type="button" className="reference-community-back" onClick={() => setOpenThreadId(null)}>
+          <ChevronLeft size={14} /> All discussions
+        </button>
+        <div className="reference-community-thread-post">
+          <div className="reference-community-thread-post-head">
+            {openThread.pinned && <span className="reference-community-pin-badge"><Pin size={11} /> Pinned</span>}
+            <span className={`reference-community-tag tag-${openThread.tag.replace(/\s+/g, '-').toLowerCase()}`}>{openThread.tag}</span>
+          </div>
+          <h1>{openThread.title}</h1>
+          <p>{openThread.body}</p>
+          <div className="reference-community-thread-meta">
+            <RiotAvatar size="small" muted /> <strong>{openThread.author}</strong> <span>· {openThread.time}</span>
+            <button type="button" className="reference-community-vote" onClick={() => upvoteThread(openThread.id)}>
+              <ArrowBigUp size={15} /> {openThread.upvotes}
+            </button>
+          </div>
+        </div>
+        <div className="reference-community-replies">
+          <div className="reference-community-section-title">
+            <span>{openThread.replies.length} {openThread.replies.length === 1 ? 'reply' : 'replies'}</span>
+          </div>
+          {openThread.replies.map((reply) => (
+            <div className="reference-community-reply" key={reply.id}>
+              <CornerDownRight size={13} className="reference-community-reply-arrow" />
+              <div>
+                <div className="reference-community-thread-meta">
+                  <strong>{reply.author}</strong> <span>· {reply.time}</span>
+                </div>
+                <p>{reply.body}</p>
+              </div>
+            </div>
+          ))}
+          <div className="reference-community-composer">
+            <textarea
+              placeholder={`Reply to "${openThread.title}"…`}
+              value={replyDraft}
+              onChange={(event) => setReplyDraft(event.target.value)}
+              rows={3}
+            />
+            <button type="button" onClick={submitReply} disabled={!replyDraft.trim()}>
+              <Send size={13} /> Reply
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="reference-community-discussions">
+      <div className="reference-community-toolbar">
+        <div className="reference-community-sort">
+          {communitySortOptions.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              className={sort === option.id ? 'is-active' : ''}
+              onClick={() => setSort(option.id)}
+            >
+              <option.icon size={13} /> {option.label}
+            </button>
+          ))}
+        </div>
+        <button type="button" className="reference-community-start" onClick={() => setComposerOpen((v) => !v)}>
+          <Plus size={14} /> Start a discussion
+        </button>
+      </div>
+      {composerOpen && (
+        <div className="reference-community-composer reference-community-composer-thread">
+          <input
+            type="text"
+            placeholder="Discussion title"
+            value={draftTitle}
+            onChange={(event) => setDraftTitle(event.target.value)}
+            maxLength={120}
+          />
+          <textarea
+            placeholder="What's on your mind?"
+            value={draftBody}
+            onChange={(event) => setDraftBody(event.target.value)}
+            rows={3}
+          />
+          <div className="reference-community-composer-row">
+            <div className="reference-community-tag-picker">
+              {(['General', 'Help', 'Fan Content', 'Bug Reports'] as const).map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  className={draftTag === tag ? 'is-active' : ''}
+                  onClick={() => setDraftTag(tag)}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+            <button type="button" onClick={submitThread} disabled={!draftTitle.trim()}>
+              <Send size={13} /> Post
+            </button>
+          </div>
+        </div>
+      )}
+      {sorted.map((thread) => (
+        <button className="reference-discussion-row" key={thread.id} type="button" onClick={() => setOpenThreadId(thread.id)}>
+          <span className="reference-discussion-icon">{thread.pinned ? <Pin size={14} /> : <MessageCircle size={15} />}</span>
+          <span className="reference-discussion-copy">
+            <strong>{thread.title}</strong>
+            <small>
+              <span className={`reference-community-tag tag-${thread.tag.replace(/\s+/g, '-').toLowerCase()}`}>{thread.tag}</span>
+              {thread.author} · {thread.time}
+            </small>
+          </span>
+          <span className="reference-discussion-replies">{thread.replies.length}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function SuggestionsSection({ game }: { game: Game }) {
+  const [suggestions, setSuggestions] = useState<Suggestion[]>(() => seedSuggestions(game));
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [draftTitle, setDraftTitle] = useState('');
+  const [draftBody, setDraftBody] = useState('');
+
+  const vote = (id: string, direction: 1 | -1) => {
+    setSuggestions((current) =>
+      current.map((s) => {
+        if (s.id !== id) return s;
+        const nextVote = s.userVote === direction ? 0 : direction;
+        const delta = nextVote - s.userVote;
+        return { ...s, votes: s.votes + delta, userVote: nextVote };
+      }),
+    );
+  };
+
+  const submit = () => {
+    if (!draftTitle.trim()) return;
+    const suggestion: Suggestion = {
+      id: nextMockId(),
+      title: draftTitle.trim(),
+      body: draftBody.trim(),
+      author: 'You',
+      time: 'just now',
+      status: 'Under Review',
+      votes: 1,
+      userVote: 1,
+    };
+    setSuggestions((current) => [suggestion, ...current].sort((a, b) => b.votes - a.votes));
+    setDraftTitle('');
+    setDraftBody('');
+    setComposerOpen(false);
+  };
+
+  const sorted = [...suggestions].sort((a, b) => b.votes - a.votes);
+
+  return (
+    <div className="reference-community-suggestions">
+      <div className="reference-community-toolbar">
+        <p className="reference-community-hint"><Lightbulb size={13} /> Vote up what you want to see next — the team reads these.</p>
+        <button type="button" className="reference-community-start" onClick={() => setComposerOpen((v) => !v)}>
+          <Plus size={14} /> Suggest something
+        </button>
+      </div>
+      {composerOpen && (
+        <div className="reference-community-composer reference-community-composer-thread">
+          <input
+            type="text"
+            placeholder="Suggestion title"
+            value={draftTitle}
+            onChange={(event) => setDraftTitle(event.target.value)}
+            maxLength={100}
+          />
+          <textarea
+            placeholder="What would this add, and why does it matter?"
+            value={draftBody}
+            onChange={(event) => setDraftBody(event.target.value)}
+            rows={3}
+          />
+          <div className="reference-community-composer-row reference-community-composer-row-end">
+            <button type="button" onClick={submit} disabled={!draftTitle.trim()}>
+              <Send size={13} /> Submit
+            </button>
+          </div>
+        </div>
+      )}
+      {sorted.map((suggestion) => (
+        <div className="reference-suggestion-row" key={suggestion.id}>
+          <div className="reference-suggestion-votes">
+            <button
+              type="button"
+              className={suggestion.userVote === 1 ? 'is-active' : ''}
+              onClick={() => vote(suggestion.id, 1)}
+              aria-label="Upvote"
+            >
+              <ArrowBigUp size={18} />
+            </button>
+            <strong>{suggestion.votes}</strong>
+            <button
+              type="button"
+              className={suggestion.userVote === -1 ? 'is-active' : ''}
+              onClick={() => vote(suggestion.id, -1)}
+              aria-label="Downvote"
+            >
+              <ArrowBigDown size={18} />
+            </button>
+          </div>
+          <div className="reference-suggestion-copy">
+            <div className="reference-suggestion-head">
+              <strong>{suggestion.title}</strong>
+              <span className={`reference-suggestion-status status-${suggestion.status.replace(/\s+/g, '-').toLowerCase()}`}>
+                {suggestion.status === 'Shipped' && <CheckCircle2 size={11} />}
+                {suggestion.status}
+              </span>
+            </div>
+            <p>{suggestion.body}</p>
+            <small>{suggestion.author} · {suggestion.time}</small>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StarRow({ value, size = 14 }: { value: number; size?: number }) {
+  return (
+    <span className="reference-star-row" aria-label={`${value} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star key={n} size={size} fill={n <= value ? 'currentColor' : 'none'} className={n <= value ? 'is-filled' : ''} />
+      ))}
+    </span>
+  );
+}
+
+function ReviewsSection({ game }: { game: Game }) {
+  const [reviews, setReviews] = useState<Review[]>(() => seedReviews(game));
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [draftStars, setDraftStars] = useState<1 | 2 | 3 | 4 | 5>(5);
+  const [draftBody, setDraftBody] = useState('');
+
+  const average = reviews.length ? reviews.reduce((sum, r) => sum + r.stars, 0) / reviews.length : 0;
+  const histogram = [5, 4, 3, 2, 1].map((star) => ({
+    star,
+    count: reviews.filter((r) => r.stars === star).length,
+  }));
+  const maxCount = Math.max(1, ...histogram.map((h) => h.count));
+
+  const markHelpful = (id: string) => {
+    setReviews((current) =>
+      current.map((r) =>
+        r.id === id ? { ...r, markedHelpful: !r.markedHelpful, helpful: r.helpful + (r.markedHelpful ? -1 : 1) } : r,
+      ),
+    );
+  };
+
+  const submit = () => {
+    if (!draftBody.trim()) return;
+    const review: Review = {
+      id: nextMockId(),
+      author: 'You',
+      stars: draftStars,
+      body: draftBody.trim(),
+      time: 'just now',
+      helpful: 0,
+      markedHelpful: false,
+    };
+    setReviews((current) => [review, ...current]);
+    setDraftBody('');
+    setComposerOpen(false);
+  };
+
+  return (
+    <div className="reference-community-reviews">
+      <div className="reference-reviews-summary">
+        <div className="reference-reviews-average">
+          <strong>{average.toFixed(1)}</strong>
+          <StarRow value={Math.round(average)} size={16} />
+          <span>{reviews.length} reviews</span>
+        </div>
+        <div className="reference-reviews-histogram">
+          {histogram.map((row) => (
+            <div className="reference-reviews-histogram-row" key={row.star}>
+              <span>{row.star}★</span>
+              <div className="reference-reviews-histogram-track">
+                <div className="reference-reviews-histogram-fill" style={{ width: `${(row.count / maxCount) * 100}%` }} />
+              </div>
+              <span>{row.count}</span>
+            </div>
+          ))}
+        </div>
+        <button type="button" className="reference-community-start" onClick={() => setComposerOpen((v) => !v)}>
+          <Star size={14} /> Write a review
+        </button>
+      </div>
+      {composerOpen && (
+        <div className="reference-community-composer reference-community-composer-thread">
+          <div className="reference-star-picker">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <button
+                key={n}
+                type="button"
+                aria-label={`${n} stars`}
+                className={n <= draftStars ? 'is-filled' : ''}
+                onClick={() => setDraftStars(n as 1 | 2 | 3 | 4 | 5)}
+              >
+                <Star size={22} fill={n <= draftStars ? 'currentColor' : 'none'} />
+              </button>
+            ))}
+          </div>
+          <textarea
+            placeholder={`What did you think of ${game.title}?`}
+            value={draftBody}
+            onChange={(event) => setDraftBody(event.target.value)}
+            rows={3}
+          />
+          <div className="reference-community-composer-row reference-community-composer-row-end">
+            <button type="button" onClick={submit} disabled={!draftBody.trim()}>
+              <Send size={13} /> Publish review
+            </button>
+          </div>
+        </div>
+      )}
+      <div className="reference-reviews-list">
+        {reviews.map((review) => (
+          <div className="reference-review-row" key={review.id}>
+            <div className="reference-community-thread-meta">
+              <RiotAvatar size="small" muted /> <strong>{review.author}</strong> <span>· {review.time}</span>
+            </div>
+            <StarRow value={review.stars} />
+            <p>{review.body}</p>
+            <button
+              type="button"
+              className={`reference-review-helpful ${review.markedHelpful ? 'is-active' : ''}`}
+              onClick={() => markHelpful(review.id)}
+            >
+              <ThumbsUp size={12} /> Helpful ({review.helpful})
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GuidesSection({ game }: { game: Game }) {
+  const [guides, setGuides] = useState<Guide[]>(() => seedGuides(game));
+  const [openGuideId, setOpenGuideId] = useState<string | null>(null);
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [draftTitle, setDraftTitle] = useState('');
+  const [draftBody, setDraftBody] = useState('');
+  const [draftTag, setDraftTag] = useState<Guide['tag']>('Beginner');
+
+  const openGuide = guides.find((g) => g.id === openGuideId) ?? null;
+
+  const submit = () => {
+    if (!draftTitle.trim() || !draftBody.trim()) return;
+    const guide: Guide = {
+      id: nextMockId(),
+      title: draftTitle.trim(),
+      author: 'You',
+      tag: draftTag,
+      views: 0,
+      excerpt: draftBody.trim().slice(0, 120) + (draftBody.trim().length > 120 ? '…' : ''),
+      body: draftBody.trim(),
+    };
+    setGuides((current) => [guide, ...current]);
+    setDraftTitle('');
+    setDraftBody('');
+    setComposerOpen(false);
+  };
+
+  if (openGuide) {
+    return (
+      <div className="reference-community-thread">
+        <button type="button" className="reference-community-back" onClick={() => setOpenGuideId(null)}>
+          <ChevronLeft size={14} /> All guides
+        </button>
+        <div className="reference-community-thread-post">
+          <div className="reference-community-thread-post-head">
+            <span className={`reference-community-tag tag-${openGuide.tag.toLowerCase()}`}>{openGuide.tag}</span>
+          </div>
+          <h1>{openGuide.title}</h1>
+          <p>{openGuide.body}</p>
+          <div className="reference-community-thread-meta">
+            <RiotAvatar size="small" muted /> <strong>{openGuide.author}</strong>
+            <span className="reference-guide-views"><Eye size={12} /> {openGuide.views.toLocaleString()} views</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="reference-community-guides">
+      <div className="reference-community-toolbar">
+        <p className="reference-community-hint"><BookOpen size={13} /> Written by players, for players.</p>
+        <button type="button" className="reference-community-start" onClick={() => setComposerOpen((v) => !v)}>
+          <Plus size={14} /> Write a guide
+        </button>
+      </div>
+      {composerOpen && (
+        <div className="reference-community-composer reference-community-composer-thread">
+          <input
+            type="text"
+            placeholder="Guide title"
+            value={draftTitle}
+            onChange={(event) => setDraftTitle(event.target.value)}
+            maxLength={120}
+          />
+          <textarea
+            placeholder="Share what you know…"
+            value={draftBody}
+            onChange={(event) => setDraftBody(event.target.value)}
+            rows={4}
+          />
+          <div className="reference-community-composer-row">
+            <div className="reference-community-tag-picker">
+              {(['Beginner', 'Advanced', 'Walkthrough'] as const).map((tag) => (
+                <button key={tag} type="button" className={draftTag === tag ? 'is-active' : ''} onClick={() => setDraftTag(tag)}>
+                  {tag}
+                </button>
+              ))}
+            </div>
+            <button type="button" onClick={submit} disabled={!draftTitle.trim() || !draftBody.trim()}>
+              <Send size={13} /> Publish
+            </button>
+          </div>
+        </div>
+      )}
+      <div className="reference-guides-grid">
+        {guides.map((guide) => (
+          <button className="reference-guide-card" key={guide.id} type="button" onClick={() => setOpenGuideId(guide.id)}>
+            <span className={`reference-community-tag tag-${guide.tag.toLowerCase()}`}>{guide.tag}</span>
+            <strong>{guide.title}</strong>
+            <p>{guide.excerpt}</p>
+            <small>{guide.author} · <Eye size={11} /> {guide.views.toLocaleString()}</small>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const communitySections = [
+  { id: 'discussions', label: 'Discussions', icon: MessageCircle },
+  { id: 'suggestions', label: 'Suggestions', icon: Lightbulb },
+  { id: 'reviews', label: 'Reviews', icon: Star },
+  { id: 'guides', label: 'Guides', icon: BookOpen },
+] as const;
+type CommunitySectionId = (typeof communitySections)[number]['id'];
+
+function CommunityContent({ game }: { game: Game }) {
+  const [section, setSection] = useState<CommunitySectionId>('discussions');
+
   return (
     <section className="reference-community">
       <header className="reference-community-header">
         <div>
           <div className="reference-kicker">Community · {game.title}</div>
           <h1>{game.title} Community</h1>
-          <p>Talk about routes, discoveries, and everything happening in the world of {game.title}.</p>
+          <p>Discussions, suggestions, reviews, and player-written guides — all in one place.</p>
         </div>
-        <button className="reference-community-start" type="button"><MessageCircle size={14} /> Start a discussion</button>
-      </header>
-      <div className="reference-community-layout">
-        <div className="reference-community-discussions">
-          <div className="reference-community-section-title">
-            <span>Recent discussions</span>
-            <span>{discussions.length} active</span>
-          </div>
-          {discussions.map((discussion) => (
-            <button className="reference-discussion-row" key={discussion.title} type="button">
-              <span className="reference-discussion-icon"><MessageCircle size={15} /></span>
-              <span className="reference-discussion-copy">
-                <strong>{discussion.title}</strong>
-                <small>{discussion.author} · {discussion.time}</small>
-              </span>
-              <span className="reference-discussion-replies">{discussion.replies}</span>
-            </button>
-          ))}
-        </div>
-        <aside className="reference-community-sidebar">
-          <span>About this community</span>
-          <strong>{game.title}</strong>
-          <p>A place for players to share quiet discoveries and compare the choices that shape every run.</p>
+        <aside className="reference-community-sidebar reference-community-sidebar-compact">
           <div><UsersRound size={13} /> 12.4k members</div>
-          <div><MessageCircle size={13} /> Open discussions</div>
+          <div><Circle size={7} fill="currentColor" className="reference-community-online-dot" /> 812 online</div>
         </aside>
+      </header>
+      <nav className="reference-community-subnav">
+        {communitySections.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={section === item.id ? 'is-active' : ''}
+            onClick={() => setSection(item.id)}
+          >
+            <item.icon size={14} /> {item.label}
+          </button>
+        ))}
+      </nav>
+      <div className="reference-community-layout reference-community-layout-single">
+        {/* All four stay mounted (just hidden) rather than conditionally
+            rendered, so switching sub-tabs never discards a draft post,
+            a vote, or a newly published guide/review from earlier in
+            the session — only leaving the Community tab entirely does. */}
+        <div style={{ display: section === 'discussions' ? undefined : 'none' }}>
+          <DiscussionsSection game={game} />
+        </div>
+        <div style={{ display: section === 'suggestions' ? undefined : 'none' }}>
+          <SuggestionsSection game={game} />
+        </div>
+        <div style={{ display: section === 'reviews' ? undefined : 'none' }}>
+          <ReviewsSection game={game} />
+        </div>
+        <div style={{ display: section === 'guides' ? undefined : 'none' }}>
+          <GuidesSection game={game} />
+        </div>
       </div>
     </section>
   );
@@ -1247,6 +1984,55 @@ function Client() {
   );
   const currentGame = path.startsWith('/games/') ? selectedGame : null;
   const gameContextClass = currentGame ? ` reference-game-${currentGame.id}` : '';
+
+  // Ref mirror of currentGame so the tray-event listeners below (mounted
+  // once, see the empty dependency array) always read the game the user
+  // is actually looking at right now, instead of whatever it was when
+  // the listeners were first attached.
+  const currentGameRef = useRef(currentGame);
+  useEffect(() => {
+    currentGameRef.current = currentGame;
+  }, [currentGame]);
+
+  // Bridges the Windows system tray menu (built in src-tauri/src/lib.rs)
+  // to the app's own React state — the tray lives outside the webview,
+  // so it can't call setPath/setSignedOut directly and instead emits a
+  // Tauri event that we listen for here. No-ops outside Tauri (e.g. `bun
+  // run dev` in a plain browser tab), same fallback pattern as
+  // lib/window-controls.ts.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('__TAURI_INTERNALS__' in window)) return;
+    let unlistenFns: Array<() => void> = [];
+    let cancelled = false;
+    (async () => {
+      const { listen } = await import('@tauri-apps/api/event');
+      if (cancelled) return;
+      const offNavigate = await listen<string>('juhra://navigate', (event) => {
+        setPath(event.payload);
+      });
+      const offSettings = await listen('juhra://open-settings', () => {
+        setSettingsGame(currentGameRef.current);
+        setSettingsOpen(true);
+        setTopMenu(null);
+        setFriendsOpen(false);
+      });
+      const offSignOut = await listen('juhra://sign-out', () => {
+        setTopMenu(null);
+        setSignedOut(true);
+      });
+      if (cancelled) {
+        offNavigate();
+        offSettings();
+        offSignOut();
+        return;
+      }
+      unlistenFns = [offNavigate, offSettings, offSignOut];
+    })();
+    return () => {
+      cancelled = true;
+      unlistenFns.forEach((off) => off());
+    };
+  }, []);
   const openGame = (id: string) => setPath(`/games/${id}`);
   const openSocial = (mode: SocialMode = 'friends', tab: SocialTab = 'friends') => {
     setSocialMode(mode);
