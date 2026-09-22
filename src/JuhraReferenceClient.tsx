@@ -5,13 +5,16 @@ import {
   ArrowBigUp,
   ArrowUpRight,
   Bell,
+  BellRing,
   BookOpen,
+  Check,
   CheckCircle2,
   ChevronDown,
   ChevronLeft,
   Circle,
   Clock,
   CornerDownRight,
+  Download,
   Eye,
   Flame,
   Gamepad2,
@@ -19,18 +22,23 @@ import {
   Home as HomeIcon,
   Lightbulb,
   List,
+  Lock,
   LogOut,
   MessageCircle,
   Minus,
   Pin,
   Play,
   Plus,
+  RefreshCw,
   Search,
   Send,
   Settings,
+  ShoppingBag,
+  Sparkles,
   Star,
   Sun,
   ThumbsUp,
+  Trophy,
   UserPlus,
   UserRound,
   Users,
@@ -108,6 +116,133 @@ const games: Game[] = [
     theme: palaceOfDustTheme,
   },
 ];
+
+// ---------------------------------------------------------------------
+// Store — games not yet in the player's library. Uses the same `art`
+// class convention as `games` (a CSS gradient background, see
+// reference-client.css), just with three new classes added for these.
+// Session-only: "owned" additions from the Store live in Client()'s
+// `libraryAdditions` state, not here, so this array itself never changes.
+// ---------------------------------------------------------------------
+type StoreGame = {
+  id: string;
+  title: string;
+  tagline: string;
+  genre: string;
+  price: string;
+  art: string;
+};
+
+const storeGames: StoreGame[] = [
+  {
+    id: 'hollow-frequency',
+    title: 'Hollow Frequency',
+    tagline: 'Something is still broadcasting from the station.',
+    genre: 'Horror adventure',
+    price: '$24.99',
+    art: 'reference-art-hollow',
+  },
+  {
+    id: 'glasswing',
+    title: 'Glasswing',
+    tagline: 'Every choice leaves a mark on the wing.',
+    genre: 'Narrative strategy',
+    price: '$19.99',
+    art: 'reference-art-glasswing',
+  },
+  {
+    id: 'last-ember',
+    title: 'Last Ember',
+    tagline: 'The fire remembers who fed it.',
+    genre: 'Survival RPG',
+    price: '$29.99',
+    art: 'reference-art-ember',
+  },
+];
+
+// ---------------------------------------------------------------------
+// Notifications — client-wide, shown from the Bell menu in the Topbar.
+// Session-only like everything else without a backend (see the
+// Community section comment further down for the general pattern).
+// ---------------------------------------------------------------------
+type NotificationKind = 'friend' | 'achievement' | 'patch' | 'system';
+type AppNotification = {
+  id: string;
+  kind: NotificationKind;
+  title: string;
+  body: string;
+  time: string;
+  read: boolean;
+};
+
+const initialNotifications: AppNotification[] = [
+  {
+    id: 'n1',
+    kind: 'friend',
+    title: 'Mara Voss is now playing Ashen Reach',
+    body: 'Jump in and explore together.',
+    time: '12m ago',
+    read: false,
+  },
+  {
+    id: 'n2',
+    kind: 'achievement',
+    title: 'Achievement unlocked in Red Assembly',
+    body: '"First Vote" — cast your first ballot in the Assembly.',
+    time: '1h ago',
+    read: false,
+  },
+  {
+    id: 'n3',
+    kind: 'patch',
+    title: 'Blue Echo update 1.3.05 is live',
+    body: 'New field events, balance tuning, and quality-of-life changes.',
+    time: '5h ago',
+    read: false,
+  },
+  {
+    id: 'n4',
+    kind: 'friend',
+    title: 'Jules Ahn sent you a party invite',
+    body: 'Palace of Dust · Expires in 20 minutes.',
+    time: '6h ago',
+    read: true,
+  },
+  {
+    id: 'n5',
+    kind: 'system',
+    title: 'Welcome to Juhra',
+    body: 'Your account is ready. Explore your library to get started.',
+    time: '2d ago',
+    read: true,
+  },
+];
+
+// ---------------------------------------------------------------------
+// Achievements — per game, shown as a GameHub tab. Session-only state
+// (see DiscussionsSection etc. below for the same pattern): unlocking
+// one during a session updates the on-screen progress, but resets next
+// launch since there's no backend to persist it to.
+// ---------------------------------------------------------------------
+type Achievement = {
+  id: string;
+  title: string;
+  description: string;
+  unlocked: boolean;
+  unlockedOn?: string;
+  rarity: number; // percent of players who have this
+};
+
+function seedAchievements(game: Game): Achievement[] {
+  return [
+    { id: 'a1', title: 'First Steps', description: `Begin your journey into ${game.title}.`, unlocked: true, unlockedOn: '3w ago', rarity: 96 },
+    { id: 'a2', title: 'Off the Path', description: 'Find a location the story never points you toward.', unlocked: true, unlockedOn: '3w ago', rarity: 61 },
+    { id: 'a3', title: 'Close Read', description: 'Read every collectible note in a single act.', unlocked: true, unlockedOn: '2w ago', rarity: 34 },
+    { id: 'a4', title: 'No Loose Ends', description: 'Resolve every open thread before the midpoint.', unlocked: false, rarity: 22 },
+    { id: 'a5', title: 'The Long Way', description: `Finish ${game.title} without skipping a single optional scene.`, unlocked: false, rarity: 9 },
+    { id: 'a6', title: 'Ghost', description: 'Complete a full act without being detected once.', unlocked: false, rarity: 4 },
+  ];
+}
 
 const homeStories = [
   {
@@ -259,6 +394,26 @@ function Rail({
             <Grid2X2 size={17} />
           </Link>
         </SidebarTooltip>
+        <SidebarTooltip label="Library">
+          <Link
+            href="/library"
+            aria-label="Library"
+            className={`reference-rail-button ${path === '/library' ? 'is-active' : ''}`}
+          >
+            {path === '/library' && <motion.span layoutId="rail-active" className="reference-rail-active-glow" transition={{ type: 'spring', stiffness: 420, damping: 32 }} />}
+            <List size={17} />
+          </Link>
+        </SidebarTooltip>
+        <SidebarTooltip label="Store">
+          <Link
+            href="/store"
+            aria-label="Store"
+            className={`reference-rail-button ${path === '/store' ? 'is-active' : ''}`}
+          >
+            {path === '/store' && <motion.span layoutId="rail-active" className="reference-rail-active-glow" transition={{ type: 'spring', stiffness: 420, damping: 32 }} />}
+            <ShoppingBag size={17} />
+          </Link>
+        </SidebarTooltip>
         <div className="reference-rail-divider" />
         {gamesRail.map((item) => (
           <SidebarTooltip key={item.id} label={games.find((game) => game.id === item.id)?.title ?? item.id}>
@@ -311,6 +466,8 @@ function Topbar({
   onFriends,
   onGameMenu,
   onAccount,
+  onNotifications,
+  unreadCount,
   theme,
   onThemeToggle,
 }: {
@@ -318,6 +475,8 @@ function Topbar({
   onFriends: () => void;
   onGameMenu: () => void;
   onAccount: () => void;
+  onNotifications: () => void;
+  unreadCount: number;
   theme: 'dark' | 'light';
   onThemeToggle: () => void;
 }) {
@@ -327,6 +486,16 @@ function Topbar({
       <div className="reference-topbar-title" data-tauri-drag-region="">{title}</div>
       <div className="reference-topbar-actions">
         <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+        <button
+          type="button"
+          className="reference-notif-bell"
+          onClick={onNotifications}
+          aria-label={unreadCount > 0 ? `Notifications, ${unreadCount} unread` : 'Notifications'}
+          aria-haspopup="menu"
+        >
+          {unreadCount > 0 ? <BellRing size={15} /> : <Bell size={15} />}
+          {unreadCount > 0 && <span className="reference-notif-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>}
+        </button>
         <div className="reference-status-pill" aria-label="Social and account controls">
           <button className="reference-status-game" onClick={onGameMenu} aria-label="Open game menu" aria-haspopup="menu">
             <Gamepad2 size={14} />
@@ -530,6 +699,115 @@ function Games({ onOpenGame }: { onOpenGame: (id: string) => void }) {
   );
 }
 
+function Library({ onOpenGame, extraGames }: { onOpenGame: (id: string) => void; extraGames: StoreGame[] }) {
+  const [view, setView] = useState<'grid' | 'list'>('grid');
+  const [sort, setSort] = useState<'title' | 'status'>('title');
+
+  // Library shows everything owned: the core `games` array plus whatever
+  // was added from the Store this session. Store additions don't have a
+  // real GameHub page to open (no theme/patch notes/community seeded for
+  // them), so they're shown but not clickable — same honesty tradeoff as
+  // the rest of the app's session-only features.
+  const entries = [
+    ...games.map((g) => ({ id: g.id, title: g.title, art: g.art, status: g.status as string, openable: true })),
+    ...extraGames.map((g) => ({ id: g.id, title: g.title, art: g.art, status: 'Installed', openable: false })),
+  ].sort((a, b) => (sort === 'title' ? a.title.localeCompare(b.title) : a.status.localeCompare(b.status)));
+
+  return (
+    <main className="reference-page reference-library-page">
+      <header className="reference-library-header">
+        <div>
+          <div className="reference-kicker">Your collection</div>
+          <h1>Library</h1>
+          <p>Every world you own, installed or not.</p>
+        </div>
+        <div className="reference-library-controls">
+          <div className="reference-library-sort">
+            <button type="button" className={sort === 'title' ? 'is-active' : ''} onClick={() => setSort('title')}>A–Z</button>
+            <button type="button" className={sort === 'status' ? 'is-active' : ''} onClick={() => setSort('status')}>Status</button>
+          </div>
+          <div className="reference-library-view-toggle">
+            <button type="button" aria-label="Grid view" className={view === 'grid' ? 'is-active' : ''} onClick={() => setView('grid')}><Grid2X2 size={14} /></button>
+            <button type="button" aria-label="List view" className={view === 'list' ? 'is-active' : ''} onClick={() => setView('list')}><List size={14} /></button>
+          </div>
+        </div>
+      </header>
+      {view === 'grid' ? (
+        <div className="reference-game-grid reference-library-grid">
+          {entries.map((entry) => (
+            <button
+              key={entry.id}
+              className={`reference-large-game ${!entry.openable ? 'is-not-openable' : ''}`}
+              onClick={() => entry.openable && onOpenGame(entry.id)}
+              disabled={!entry.openable}
+            >
+              <div className={`reference-game-image ${entry.art}`} />
+              <div className="reference-large-game-footer">
+                <strong>{entry.title}</strong>
+                <span>{entry.status}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="reference-library-list">
+          {entries.map((entry) => (
+            <button
+              key={entry.id}
+              className={`reference-library-row ${!entry.openable ? 'is-not-openable' : ''}`}
+              onClick={() => entry.openable && onOpenGame(entry.id)}
+              disabled={!entry.openable}
+            >
+              <div className={`reference-library-row-art ${entry.art}`} />
+              <span className="reference-library-row-title">{entry.title}</span>
+              <span className="reference-library-row-status">{entry.status}</span>
+              {entry.openable && <ArrowUpRight size={14} />}
+            </button>
+          ))}
+        </div>
+      )}
+    </main>
+  );
+}
+
+function Store({ owned, onAddToLibrary }: { owned: StoreGame[]; onAddToLibrary: (game: StoreGame) => void }) {
+  return (
+    <main className="reference-page reference-store-page">
+      <header className="reference-store-header">
+        <div className="reference-kicker">Discover</div>
+        <h1>Store</h1>
+        <p>New worlds from Juhra Studio, ready to add to your library.</p>
+      </header>
+      <div className="reference-store-grid">
+        {storeGames.map((game) => {
+          const isOwned = owned.some((g) => g.id === game.id);
+          return (
+            <div key={game.id} className="reference-store-card">
+              <div className={`reference-store-card-art ${game.art}`} />
+              <div className="reference-store-card-body">
+                <div className="reference-store-card-head">
+                  <strong>{game.title}</strong>
+                  <span className="reference-store-price">{game.price}</span>
+                </div>
+                <span className="reference-store-genre">{game.genre}</span>
+                <p>{game.tagline}</p>
+                <button
+                  type="button"
+                  className={`reference-store-add ${isOwned ? 'is-owned' : ''}`}
+                  disabled={isOwned}
+                  onClick={() => onAddToLibrary(game)}
+                >
+                  {isOwned ? (<><Check size={13} /> In Library</>) : (<><ShoppingBag size={13} /> Add to Library</>)}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </main>
+  );
+}
+
 function PatchNotesContent({ game }: { game: Game }) {
   return (
     <article className="reference-patch-notes">
@@ -611,6 +889,53 @@ function MerchContent({ game }: { game: Game }) {
     </section>
   );
 }
+
+function AchievementsContent({ game }: { game: Game }) {
+  // Session-only, same as Community — unlocking one here reflects
+  // immediately, but resets next launch since there's no backend.
+  const [achievements] = useState<Achievement[]>(() => seedAchievements(game));
+  const unlockedCount = achievements.filter((a) => a.unlocked).length;
+  const percent = Math.round((unlockedCount / achievements.length) * 100);
+
+  return (
+    <section className="reference-achievements">
+      <header className="reference-achievements-header">
+        <div>
+          <div className="reference-kicker">Achievements · {game.title}</div>
+          <h1>{unlockedCount} of {achievements.length} unlocked</h1>
+        </div>
+        <div className="reference-achievements-progress">
+          <div className="reference-achievements-progress-track">
+            <div className="reference-achievements-progress-fill" style={{ width: `${percent}%` }} />
+          </div>
+          <span>{percent}%</span>
+        </div>
+      </header>
+      <div className="reference-achievements-grid">
+        {achievements.map((achievement) => (
+          <div key={achievement.id} className={`reference-achievement-card ${achievement.unlocked ? 'is-unlocked' : 'is-locked'}`}>
+            <span className="reference-achievement-icon">
+              {achievement.unlocked ? <Trophy size={18} /> : <Lock size={16} />}
+            </span>
+            <div className="reference-achievement-copy">
+              <strong>{achievement.title}</strong>
+              <p>{achievement.description}</p>
+              <div className="reference-achievement-meta">
+                {achievement.unlocked ? (
+                  <span className="reference-achievement-unlocked-on">Unlocked {achievement.unlockedOn}</span>
+                ) : (
+                  <span className="reference-achievement-locked-label">Locked</span>
+                )}
+                <span className="reference-achievement-rarity">{achievement.rarity}% of players</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 
 // ---------------------------------------------------------------------
 // Community tab — Discussions, Suggestions, Reviews, Guides.
@@ -1381,13 +1706,14 @@ function CommunityContent({ game }: { game: Game }) {
 
 function GameHub({ game }: { game: Game }) {
   const [tab, setTab] = useState('Overview');
-  const tabs = ['Overview', 'Patch Notes', 'Merch', 'Community'];
+  const tabs = ['Overview', 'Patch Notes', 'Merch', 'Community', 'Achievements'];
   const isPatchNotes = tab === 'Patch Notes';
   const isMerch = tab === 'Merch';
   const isCommunity = tab === 'Community';
-  const isSecondaryTab = isPatchNotes || isMerch || isCommunity;
+  const isAchievements = tab === 'Achievements';
+  const isSecondaryTab = isPatchNotes || isMerch || isCommunity || isAchievements;
   return (
-    <main className={`reference-page reference-hub-page reference-game-${game.id} ${game.art} ${isSecondaryTab ? 'is-secondary-tab' : ''} ${isPatchNotes ? 'is-patch-notes' : ''} ${isMerch ? 'is-merch' : ''} ${isCommunity ? 'is-community' : ''}`}>
+    <main className={`reference-page reference-hub-page reference-game-${game.id} ${game.art} ${isSecondaryTab ? 'is-secondary-tab' : ''} ${isPatchNotes ? 'is-patch-notes' : ''} ${isMerch ? 'is-merch' : ''} ${isCommunity ? 'is-community' : ''} ${isAchievements ? 'is-achievements' : ''}`}>
       <div className="reference-hub-overlay" />
       <nav className="reference-hub-tabs">
         {tabs.map((item) => (
@@ -1418,8 +1744,10 @@ function GameHub({ game }: { game: Game }) {
               <PatchNotesContent game={game} />
             ) : isMerch ? (
               <MerchContent game={game} />
-            ) : (
+            ) : isCommunity ? (
               <CommunityContent game={game} />
+            ) : (
+              <AchievementsContent game={game} />
             )}
           </motion.div>
         </AnimatePresence>
@@ -1732,6 +2060,78 @@ function GameMenu({ activeGame, onClose, onNavigate }: { activeGame: Game | null
   );
 }
 
+const notificationIcons: Record<NotificationKind, typeof Bell> = {
+  friend: UsersRound,
+  achievement: Trophy,
+  patch: Sparkles,
+  system: Bell,
+};
+
+function NotificationsMenu({
+  notifications,
+  onClose,
+  onMarkRead,
+  onMarkAllRead,
+}: {
+  notifications: AppNotification[];
+  onClose: () => void;
+  onMarkRead: (id: string) => void;
+  onMarkAllRead: () => void;
+}) {
+  const unreadCount = notifications.filter((n) => !n.read).length;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      className="reference-account-menu reference-notif-menu"
+      role="menu"
+      style={{ willChange: 'transform, opacity' }}
+    >
+      <div className="reference-account-menu-surface reference-notif-menu-surface">
+        <div className="reference-account-menu-profile reference-game-menu-heading">
+          <span className="reference-game-menu-icon"><Bell size={16} /></span>
+          <span>
+            <strong>Notifications</strong>
+            <small>{unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}</small>
+          </span>
+          {unreadCount > 0 && (
+            <button type="button" className="reference-notif-mark-all" onClick={onMarkAllRead}>
+              Mark all read
+            </button>
+          )}
+        </div>
+        <div className="reference-notif-list">
+          {notifications.length === 0 ? (
+            <div className="reference-notif-empty">Nothing here yet.</div>
+          ) : (
+            notifications.map((notif) => {
+              const Icon = notificationIcons[notif.kind];
+              return (
+                <button
+                  key={notif.id}
+                  type="button"
+                  role="menuitem"
+                  className={`reference-notif-item ${notif.read ? '' : 'is-unread'}`}
+                  onClick={() => onMarkRead(notif.id)}
+                >
+                  <span className={`reference-notif-icon reference-notif-icon-${notif.kind}`}><Icon size={14} /></span>
+                  <span className="reference-notif-copy">
+                    <strong>{notif.title}</strong>
+                    <small>{notif.body}</small>
+                    <span className="reference-notif-time">{notif.time}</span>
+                  </span>
+                  {!notif.read && <span className="reference-notif-dot" aria-hidden="true" />}
+                </button>
+              );
+            })
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 function SettingsToggle({ label, detail, checked, onChange }: { label: string; detail: string; checked: boolean; onChange: () => void }) {
   return (
     <div className="reference-settings-row">
@@ -1758,6 +2158,14 @@ function SettingsModal({ onClose, activeGame }: { onClose: () => void; activeGam
   const [minimizeOnClose, setMinimizeOnClose] = useState(true);
   const [hardwareAcceleration, setHardwareAcceleration] = useState(true);
   const [gameAudio, setGameAudio] = useState(true);
+  const [notifDesktop, setNotifDesktop] = useState(true);
+  const [notifFriendActivity, setNotifFriendActivity] = useState(true);
+  const [notifAchievements, setNotifAchievements] = useState(true);
+  const [notifPatchNotes, setNotifPatchNotes] = useState(false);
+  const [showOnline, setShowOnline] = useState(true);
+  const [partyInvites, setPartyInvites] = useState(true);
+  const [updateStatus, setUpdateStatus] = useState<'idle' | 'checking' | 'latest' | 'available' | 'error'>('idle');
+  const [updateInfo, setUpdateInfo] = useState<{ version: string; url: string } | null>(null);
   const selectedGame = games.find((game) => section === `game-${game.id}`);
   const contextGame = selectedGame ?? activeGame;
   const sectionLabel = section === 'client-notifications'
@@ -1883,14 +2291,26 @@ function SettingsModal({ onClose, activeGame }: { onClose: () => void; activeGam
                 <SettingsToggle
                   label="Desktop notifications"
                   detail="Show updates when a new transmission or friend activity arrives."
-                  checked={openOnStartup}
-                  onChange={() => setOpenOnStartup((value) => !value)}
+                  checked={notifDesktop}
+                  onChange={() => setNotifDesktop((value) => !value)}
                 />
                 <SettingsToggle
                   label="Friend activity"
                   detail="Notify me when friends enter a world."
-                  checked={gameAudio}
-                  onChange={() => setGameAudio((value) => !value)}
+                  checked={notifFriendActivity}
+                  onChange={() => setNotifFriendActivity((value) => !value)}
+                />
+                <SettingsToggle
+                  label="Achievement unlocks"
+                  detail="Notify me when I unlock an achievement."
+                  checked={notifAchievements}
+                  onChange={() => setNotifAchievements((value) => !value)}
+                />
+                <SettingsToggle
+                  label="Patch notes"
+                  detail="Notify me when a game I own gets an update."
+                  checked={notifPatchNotes}
+                  onChange={() => setNotifPatchNotes((value) => !value)}
                 />
               </div>
             ) : section === 'client-social' ? (
@@ -1898,14 +2318,14 @@ function SettingsModal({ onClose, activeGame }: { onClose: () => void; activeGam
                 <SettingsToggle
                   label="Show me as online"
                   detail="Let friends see when you are exploring Juhra."
-                  checked={openOnStartup}
-                  onChange={() => setOpenOnStartup((value) => !value)}
+                  checked={showOnline}
+                  onChange={() => setShowOnline((value) => !value)}
                 />
                 <SettingsToggle
                   label="Allow party invitations"
                   detail="Friends can invite you to explore a world together."
-                  checked={gameAudio}
-                  onChange={() => setGameAudio((value) => !value)}
+                  checked={partyInvites}
+                  onChange={() => setPartyInvites((value) => !value)}
                 />
               </div>
             ) : (
@@ -1939,6 +2359,62 @@ function SettingsModal({ onClose, activeGame }: { onClose: () => void; activeGam
                   checked={hardwareAcceleration}
                   onChange={() => setHardwareAcceleration((value) => !value)}
                 />
+                <div className="reference-settings-update-row">
+                  <div className="reference-settings-row-copy">
+                    <strong>Juhra Client</strong>
+                    <span>
+                      {updateStatus === 'checking' && 'Checking for updates…'}
+                      {updateStatus === 'idle' && 'Check whether a newer version is available.'}
+                      {updateStatus === 'latest' && "You're on the latest version."}
+                      {updateStatus === 'available' && updateInfo && `Version ${updateInfo.version} is available.`}
+                      {updateStatus === 'error' && "Couldn't check for updates — try again later."}
+                    </span>
+                  </div>
+                  {updateStatus === 'available' && updateInfo ? (
+                    <button
+                      type="button"
+                      className="reference-settings-update-button is-available"
+                      onClick={async () => {
+                        try {
+                          const { openUrl } = await import('@tauri-apps/plugin-opener');
+                          await openUrl(updateInfo.url);
+                        } catch {
+                          window.open(updateInfo.url, '_blank');
+                        }
+                      }}
+                    >
+                      <Download size={13} /> Download
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="reference-settings-update-button"
+                      disabled={updateStatus === 'checking'}
+                      onClick={async () => {
+                        setUpdateStatus('checking');
+                        try {
+                          if (typeof window === 'undefined' || !('__TAURI_INTERNALS__' in window)) {
+                            // No Tauri backend to check against (e.g. plain browser dev preview).
+                            setUpdateStatus('latest');
+                            return;
+                          }
+                          const { invoke } = await import('@tauri-apps/api/core');
+                          const result = await invoke<{ available: boolean; latestVersion: string; url: string }>('check_for_updates');
+                          if (result.available) {
+                            setUpdateInfo({ version: result.latestVersion, url: result.url });
+                            setUpdateStatus('available');
+                          } else {
+                            setUpdateStatus('latest');
+                          }
+                        } catch {
+                          setUpdateStatus('error');
+                        }
+                      }}
+                    >
+                      <RefreshCw size={13} /> Check for Updates
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </main>
@@ -1987,7 +2463,15 @@ function Client() {
   // single mutually-exclusive state, rendered through one
   // `mode="wait"` AnimatePresence below, guarantees the outgoing menu
   // has fully finished its exit animation before the next one mounts.
-  const [topMenu, setTopMenu] = useState<'account' | 'game' | null>(null);
+  const [topMenu, setTopMenu] = useState<'account' | 'game' | 'notifications' | null>(null);
+  const [notifications, setNotifications] = useState<AppNotification[]>(initialNotifications);
+  const [clientUpdate, setClientUpdate] = useState<{ version: string; url: string } | null>(null);
+  const [updateBannerDismissed, setUpdateBannerDismissed] = useState(false);
+  // Games added from the Store during this session — session-only, same
+  // as everything else without a backend (see the Community section
+  // comment). Library reads `games` + these merged together so an
+  // "Added to Library" action in the Store is immediately reflected.
+  const [libraryAdditions, setLibraryAdditions] = useState<StoreGame[]>([]);
   const [signedOut, setSignedOut] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsGame, setSettingsGame] = useState<Game | null>(null);
@@ -2034,13 +2518,22 @@ function Client() {
         setTopMenu(null);
         setSignedOut(true);
       });
+      const offUpdate = await listen<{ available: boolean; latestVersion: string; url: string }>(
+        'juhra://update-available',
+        (event) => {
+          if (event.payload.available) {
+            setClientUpdate({ version: event.payload.latestVersion, url: event.payload.url });
+          }
+        },
+      );
       if (cancelled) {
         offNavigate();
         offSettings();
         offSignOut();
+        offUpdate();
         return;
       }
-      unlistenFns = [offNavigate, offSettings, offSignOut];
+      unlistenFns = [offNavigate, offSettings, offSignOut, offUpdate];
     })();
     return () => {
       cancelled = true;
@@ -2061,6 +2554,16 @@ function Client() {
   const toggleGameMenu = () => {
     setTopMenu((current) => (current === 'game' ? null : 'game'));
     setFriendsOpen(false);
+  };
+  const toggleNotifications = () => {
+    setTopMenu((current) => (current === 'notifications' ? null : 'notifications'));
+    setFriendsOpen(false);
+  };
+  const markNotificationRead = (id: string) => {
+    setNotifications((current) => current.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  };
+  const markAllNotificationsRead = () => {
+    setNotifications((current) => current.map((n) => ({ ...n, read: true })));
   };
   const openSettings = () => {
     setSettingsGame(currentGame);
@@ -2084,9 +2587,13 @@ function Client() {
     ? <Home onOpenGame={openGame} onFriends={() => setFriendsOpen(true)} />
     : path === '/games'
       ? <Games onOpenGame={openGame} />
-      : path.startsWith('/games/')
-        ? <GameHub game={selectedGame} />
-        : <Home onOpenGame={openGame} onFriends={() => setFriendsOpen(true)} />;
+      : path === '/library'
+        ? <Library onOpenGame={openGame} extraGames={libraryAdditions} />
+        : path === '/store'
+          ? <Store owned={libraryAdditions} onAddToLibrary={(game) => setLibraryAdditions((current) => (current.some((g) => g.id === game.id) ? current : [...current, game]))} />
+          : path.startsWith('/games/')
+            ? <GameHub game={selectedGame} />
+            : <Home onOpenGame={openGame} onFriends={() => setFriendsOpen(true)} />;
 
   return (
     <motion.div
@@ -2097,7 +2604,44 @@ function Client() {
             transition={{ duration: .35 }}
           >
             <Rail path={path} activeGame={currentGame} onFriends={() => openSocial('friends')} onAccount={toggleAccount} onSettings={openSettings} settingsOpen={settingsOpen} />
-             <Topbar title={title} onFriends={() => openSocial('friends')} onGameMenu={toggleGameMenu} onAccount={toggleAccount} theme={theme} onThemeToggle={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')} />
+             <Topbar title={title} onFriends={() => openSocial('friends')} onGameMenu={toggleGameMenu} onAccount={toggleAccount} onNotifications={toggleNotifications} unreadCount={notifications.filter((n) => !n.read).length} theme={theme} onThemeToggle={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')} />
+            <AnimatePresence initial={false}>
+              {clientUpdate && !updateBannerDismissed && (
+                <motion.div
+                  key="update-banner"
+                  className="reference-update-banner"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: .2, ease: 'easeOut' }}
+                >
+                  <Sparkles size={14} />
+                  <span>Juhra {clientUpdate.version} is available — you're currently on an older version.</span>
+                  <button
+                    type="button"
+                    className="reference-update-banner-download"
+                    onClick={async () => {
+                      try {
+                        const { openUrl } = await import('@tauri-apps/plugin-opener');
+                        await openUrl(clientUpdate.url);
+                      } catch {
+                        window.open(clientUpdate.url, '_blank');
+                      }
+                    }}
+                  >
+                    Download
+                  </button>
+                  <button
+                    type="button"
+                    className="reference-update-banner-dismiss"
+                    aria-label="Dismiss"
+                    onClick={() => setUpdateBannerDismissed(true)}
+                  >
+                    <X size={13} />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
             <div className="reference-content">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -2128,6 +2672,15 @@ function Client() {
               )}
               {topMenu === 'game' && (
                 <GameMenu key="game-menu" activeGame={currentGame} onClose={() => setTopMenu(null)} onNavigate={setPath} />
+              )}
+              {topMenu === 'notifications' && (
+                <NotificationsMenu
+                  key="notifications-menu"
+                  notifications={notifications}
+                  onClose={() => setTopMenu(null)}
+                  onMarkRead={markNotificationRead}
+                  onMarkAllRead={markAllNotificationsRead}
+                />
               )}
             </AnimatePresence>
     </motion.div>

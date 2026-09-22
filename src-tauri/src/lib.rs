@@ -13,6 +13,86 @@ const TRAY_GAMES: &[(&str, &str)] = &[
     ("palace-of-dust", "Palace of Dust"),
 ];
 
+/// GitHub "owner/repo" the update checker looks at for releases — the
+/// same repo `.github/workflows/release.yml` publishes to.
+///
+/// ⚠️ PLACEHOLDER — this must be set to your actual GitHub repo before
+/// this feature will work. Until then, `check_for_updates` will just
+/// return an error (surfaced in Settings as "Couldn't check for
+/// updates"), which is a safe, non-breaking failure mode — it does not
+/// stop the app from building or running.
+const GITHUB_REPO: &str = "your-github-username/Juhra";
+
+#[derive(serde::Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+struct UpdateCheckResult {
+    available: bool,
+    latest_version: String,
+    url: String,
+}
+
+/// Parses a semver-ish "x.y.z" string (an optional leading "v" is
+/// stripped first) into up to 3 numeric components for comparison.
+/// Unparsable or missing components are treated as 0, which is a
+/// deliberately forgiving fallback — worst case a malformed tag just
+/// looks equal to 0.0.0 rather than crashing the check.
+fn parse_version(raw: &str) -> [u32; 3] {
+    let trimmed = raw.trim().trim_start_matches(['v', 'V']);
+    let mut parts = [0u32; 3];
+    for (i, segment) in trimmed.split('.').take(3).enumerate() {
+        let numeric: String = segment.chars().take_while(|c| c.is_ascii_digit()).collect();
+        parts[i] = numeric.parse().unwrap_or(0);
+    }
+    parts
+}
+
+#[derive(serde::Deserialize)]
+struct GithubRelease {
+    tag_name: String,
+    html_url: String,
+}
+
+async fn fetch_update_status(current_version: &str) -> Result<UpdateCheckResult, String> {
+    let client = reqwest::Client::builder()
+        // GitHub's API rejects requests with no User-Agent header (403).
+        .user_agent("Juhra-Client-Update-Checker")
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    let url = format!("https://api.github.com/repos/{GITHUB_REPO}/releases/latest");
+    let response = client
+        .get(&url)
+        .send()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !response.status().is_success() {
+        return Err(format!(
+            "GitHub API returned {} — check GITHUB_REPO in lib.rs is set correctly and a release has been published",
+            response.status()
+        ));
+    }
+
+    let release: GithubRelease = response.json().await.map_err(|e| e.to_string())?;
+
+    let latest = parse_version(&release.tag_name);
+    let current = parse_version(current_version);
+    let available = latest > current;
+
+    Ok(UpdateCheckResult {
+        available,
+        latest_version: release.tag_name.trim_start_matches(['v', 'V']).to_string(),
+        url: release.html_url,
+    })
+}
+
+/// Manually-triggered from the "Check for Updates" button in Settings.
+#[tauri::command]
+async fn check_for_updates(app: tauri::AppHandle) -> Result<UpdateCheckResult, String> {
+    let current_version = app.package_info().version.to_string();
+    fetch_update_status(&current_version).await
+}
+
 /// Bring the main window to the front — used when a second launch is
 /// attempted while Juhra is already running (single-instance), so
 /// re-clicking the app icon focuses the existing window instead of
@@ -115,8 +195,28 @@ pub fn run() {
     builder
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
+        .invoke_handler(tauri::generate_handler![check_for_updates])
         .setup(|app| {
             build_tray(&app.handle())?;
+
+            // Auto-check for updates ~3s after launch (past the initial
+            // paint, so it never competes with startup) and emit an event
+            // the frontend listens for (see the useEffect near the top of
+            // Client() in JuhraReferenceClient.tsx) to show a dismissible
+            // banner. Silent on failure — this is a background nice-to-have,
+            // not a user-initiated action, so there's nothing useful to
+            // surface if GITHUB_REPO isn't set yet or the network is down.
+            let handle = app.handle().clone();
+            tauri::async_runtime::spawn(async move {
+                tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+                let current_version = handle.package_info().version.to_string();
+                if let Ok(result) = fetch_update_status(&current_version).await {
+                    if result.available {
+                        let _ = handle.emit("juhra://update-available", result);
+                    }
+                }
+            });
+
             Ok(())
         })
         .run(tauri::generate_context!())

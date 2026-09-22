@@ -4,7 +4,49 @@ All notable changes to Juhra are documented here. Versions match the tag
 the [release workflow](.github/workflows/release.yml) builds from
 (`src-tauri/tauri.conf.json`'s `version` field).
 
+## v0.2.0
+
+Four features, all in one release:
+
+- **Store & Library pages** (`/store`, `/library`) — real pages behind
+  nav links that already existed but went nowhere. Store shows 3 new
+  games with an "Add to Library" action; Library shows everything owned
+  with a grid/list toggle and A–Z/Status sort. Session-only, same as
+  Community — additions don't survive a restart yet.
+- **Achievements tab** — a fifth GameHub tab per game, with a completion
+  progress bar and locked/unlocked achievement cards (rarity %, unlock
+  date).
+- **Real notifications** — a Bell button in the Topbar with an unread
+  badge, opening a real notification menu (mark one read, mark all
+  read). Also fixed a real pre-existing bug while wiring this up: the
+  Notifications and Social tabs in Settings were reusing General tab's
+  state variables by copy-paste mistake, so toggling "Desktop
+  notifications" was silently flipping "Launch with Juhra" behind the
+  scenes. Now has its own dedicated state.
+- **In-app update checker** — a "Check for Updates" button in Settings,
+  plus an automatic check ~3s after launch that shows a dismissible
+  banner if a newer version is out. Checks GitHub Releases directly
+  (`src-tauri/src/lib.rs`), no signing/updater-artifact infrastructure
+  needed. **Requires setup:** `GITHUB_REPO` in `lib.rs` is a placeholder
+  (`"your-github-username/Juhra"`) — set it to your actual repo or this
+  feature will always report "Couldn't check for updates."
+
+## v0.1.9
+
+
+
+- **Fixed a build-breaking config error** from v0.1.8: the NSIS
+  `license` field I added doesn't exist — the real Tauri v2 schema
+  (`additionalProperties: false` throughout) puts the license file at
+  the top level as `bundle.licenseFile`, not under `bundle.windows.nsis`.
+  Moved it there and verified the exact key list against Tauri's
+  published schema this time instead of assuming. Everything else from
+  v0.1.8 (installer branding, license page, Community CSS fixes) is
+  unchanged.
+
 ## v0.1.8
+
+
 
 - **Custom-branded Windows installer:** the setup UI no longer uses the
   default NSIS look. `src-tauri/installer/header.bmp` and `sidebar.bmp`
